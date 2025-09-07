@@ -1,16 +1,20 @@
 import { useState } from "react";
-import { Menu, X } from "lucide-react"; // icons
+import { Menu, X } from "lucide-react";
+import logo from "../assets/images/logo.jpg";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="flex justify-between items-center p-4 text-light absolute top-0 left-0 w-full z-50 bg-background/30 backdrop-blur-sm transition-colors duration-300">
+    <nav
+      id="navbar"
+      className="flex justify-between items-center p-4 text-white absolute top-0 left-0 w-full z-50 bg-background/30 backdrop-blur-sm transition-colors duration-300"
+    >
       {/* Logo + Title */}
       <div className="flex items-center gap-2">
-        <a href="#">
+        <a href="#home">
           <img
-            src="./logo.jpg"
+            src={logo}
             alt="logo"
             className="w-16 rounded transition-transform duration-300 hover:scale-105"
           />
@@ -26,7 +30,7 @@ export default function Navbar() {
           (item) => (
             <li key={item}>
               <a
-                href="#"
+                href={`#${item.toLowerCase().replace(" ", "-")}`}
                 className="hover:underline underline-offset-8 decoration-2 decoration-light/50 transition-colors duration-300 hover:text-white"
               >
                 {item.toUpperCase()}
@@ -40,7 +44,7 @@ export default function Navbar() {
       <div className="md:hidden">
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="text-light focus:outline-none"
+          className="text-white focus:outline-none"
         >
           {isOpen ? <X size={28} /> : <Menu size={28} />}
         </button>
@@ -53,7 +57,7 @@ export default function Navbar() {
             (item) => (
               <li key={item}>
                 <a
-                  href="#"
+                  href={`#${item.toLowerCase().replace(" ", "-")}`}
                   className="hover:underline underline-offset-8 decoration-2 decoration-light/50 transition-colors duration-300 hover:text-white"
                 >
                   {item}

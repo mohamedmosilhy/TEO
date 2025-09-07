@@ -4,11 +4,25 @@
   --color-secondary: #8e7861;
   --color-main: #ffaa0a;
   --color-background: #000;
-  --color-light: #fff;
 }
 
 body {
   font-family: "Khand", sans-serif;
   background-color: var(--color-background);
   color: var(--color-main);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 1s ease-out forwards;
 }

@@ -1,8 +1,10 @@
+import VideoCarousel from "./VideoCarousel";
+
 export default function Hero() {
   return (
-    <section>
+    <section id="home">
       <div className="w-full opacity-80">
-        <img src="./background.jpg" alt="background" className="w-full" />
+        <VideoCarousel />
       </div>
     </section>
   );
