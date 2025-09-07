@@ -10,7 +10,7 @@ export default function Navbar() {
       <div className="flex items-center gap-2">
         <a href="#">
           <img
-            src="/logo.jpg"
+            src="./logo.jpg"
             alt="logo"
             className="w-16 rounded transition-transform duration-300 hover:scale-105"
           />
@@ -21,7 +21,7 @@ export default function Navbar() {
       </div>
 
       {/* Desktop Menu */}
-      <ul className="hidden lg:flex gap-8 text-md font-bold">
+      <ul className="hidden md:flex md:flex-col gap-8 text-md md:absolute md:right-5 md:top-30">
         {["Home", "Projects", "Services", "Our Story", "Contact"].map(
           (item) => (
             <li key={item}>
@@ -29,7 +29,7 @@ export default function Navbar() {
                 href="#"
                 className="hover:underline underline-offset-8 decoration-2 decoration-light/50 transition-colors duration-300 hover:text-white"
               >
-                {item}
+                {item.toUpperCase()}
               </a>
             </li>
           )
@@ -37,7 +37,7 @@ export default function Navbar() {
       </ul>
 
       {/* Mobile Menu Button */}
-      <div className="lg:hidden">
+      <div className="md:hidden">
         <button
           onClick={() => setIsOpen(!isOpen)}
           className="text-light focus:outline-none"
