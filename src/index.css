@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+@theme {
+  --color-secondary: #8e7861;
+  --color-main: #ffaa0a;
+  --color-background: #000;
+  --color-light: #fff;
+}
+
+body {
+  font-family: "Khand", sans-serif;
+  background-color: var(--color-background);
+  color: var(--color-main);
+}
