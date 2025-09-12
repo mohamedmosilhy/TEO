@@ -76,7 +76,10 @@ export const Services = () => {
   }, []);
 
   return (
-    <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 p-0 m-0">
+    <section
+      id="services"
+      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 p-0 m-0"
+    >
       {services.map((service, index) => (
         <button
           key={index}

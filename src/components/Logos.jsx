@@ -1,45 +1,49 @@
 import { useRef, useEffect, useState, useCallback } from "react";
 
-export const Logos = () => {
-  const logos = [
-    { id: 1, name: "Brand A", color: "bg-main" },
-    { id: 2, name: "Brand B", color: "bg-main" },
-    { id: 3, name: "Brand C", color: "bg-main" },
-    { id: 4, name: "Brand D", color: "bg-main" },
-    { id: 5, name: "Brand E", color: "bg-main" },
-  ];
+const logosData = [
+  { id: 1, name: "Brand A", color: "bg-main" },
+  { id: 2, name: "Brand B", color: "bg-main" },
+  { id: 3, name: "Brand C", color: "bg-main" },
+  { id: 4, name: "Brand D", color: "bg-main" },
+  { id: 5, name: "Brand E", color: "bg-main" },
+];
 
+export const Logos = ({ logos = logosData }) => {
   const containerRef = useRef(null);
   const animationRef = useRef(null);
   const [offset, setOffset] = useState(0);
   const [dimensions, setDimensions] = useState({ cardWidth: 0, gap: 0 });
 
+  // Responsive speed
   const getSpeed = useCallback(() => {
     const width = window.innerWidth;
-    if (width < 640) return 0.2; // slower on mobile
+    if (width < 640) return 0.2;
     if (width < 1024) return 0.3;
     return 0.4;
   }, []);
 
+  // Responsive gap
   const getGap = useCallback(() => {
     const width = window.innerWidth;
-    if (width < 640) return 16; // gap for small screens
+    if (width < 640) return 16;
     if (width < 768) return 20;
     if (width < 1024) return 24;
     return 28;
   }, []);
 
+  // Responsive card width
   const getCardWidth = useCallback(() => {
     const width = window.innerWidth;
     const containerWidth = containerRef.current?.offsetWidth || width;
 
-    if (width < 640) return containerWidth; // full width on mobile
+    if (width < 640) return containerWidth;
     if (width < 768) return containerWidth / 2;
     if (width < 1024) return containerWidth / 3;
     if (width < 1280) return containerWidth / 4;
     return containerWidth / 5;
   }, []);
 
+  // Update card width & gap on resize
   useEffect(() => {
     const updateDimensions = () => {
       setDimensions({ cardWidth: getCardWidth(), gap: getGap() });
@@ -49,6 +53,7 @@ export const Logos = () => {
     return () => window.removeEventListener("resize", updateDimensions);
   }, [getCardWidth, getGap]);
 
+  // Animation loop
   useEffect(() => {
     if (!containerRef.current) return;
 
@@ -95,13 +100,6 @@ export const Logos = () => {
                       {logo.id}
                     </div>
                   </div>
-
-                  {/* Brand Name */}
-                  <div className="absolute bottom-2 left-0 right-0 text-center">
-                    <span className="text-xs md:text-sm font-medium text-slate-600 dark:text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      {logo.name}
-                    </span>
-                  </div>
                 </div>
               </div>
             ))}
@@ -111,5 +109,3 @@ export const Logos = () => {
     </div>
   );
 };
-
-export default Logos;
