@@ -2,8 +2,7 @@
 @import "tailwindcss";
 
 @theme {
-  --color-secondary: #8e7861;
-  --color-main: #ffaa0a;
+  --color-main: #8e7861;
   --color-background: #000;
 }
 :root {
@@ -15,6 +14,7 @@
 body {
   font-family: var(--font-body);
   height: 10000px;
+  color: white;
 }
 
 h1,
