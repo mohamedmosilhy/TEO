@@ -35,7 +35,7 @@ export default function Navbar() {
               <img
                 src={logo}
                 alt="logo"
-                className="w-14 rounded transition-transform duration-300 hover:scale-105"
+                className="w-12 rounded transition-transform duration-300 hover:scale-105"
               />
             </a>
 
@@ -47,8 +47,10 @@ export default function Navbar() {
               >
                 TEO
               </h1>
+
+              {/* Line only on desktop when navbar is not scrolled */}
               {!scrolled && (
-                <span className="absolute -bottom-1 left-0 w-full h-[2px] bg-white"></span>
+                <span className="absolute -bottom-1 left-0 w-full h-[2px] bg-white hidden md:block"></span>
               )}
             </div>
           </div>
