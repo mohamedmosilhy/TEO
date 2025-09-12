@@ -105,7 +105,7 @@ export const Services = () => {
           <div className="absolute bottom-6 left-6 z-10">
             <p
               ref={(el) => (textRefs.current[index] = el)}
-              className="text-main font-bold text-base sm:text-lg lg:text-xl uppercase tracking-wide 
+              className="text-main font-bold text-lg lg:text-base uppercase tracking-wide 
                 transform transition-all duration-700 ease-in-out
                 group-hover:translate-x-10 group-hover:opacity-0 
                 group-focus:translate-x-10 group-focus:opacity-0 
