@@ -14,7 +14,7 @@ const Contact = () => {
           action="https://docs.google.com/forms/d/e/YOUR_FORM_ID/formResponse"
           method="POST"
           target="_blank"
-          className="space-y-8"
+          className="space-y-8 max-w-2xl mx-auto"
         >
           {/* Row 1 */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -22,18 +22,20 @@ const Contact = () => {
               <label className="block mb-2 text-gray-400">Full Name</label>
               <input
                 type="text"
-                name="entry.123456789" // replace with your Google Form field ID
-                className="w-full bg-transparent border-b border-gray-600 focus:outline-none focus:border-main p-2"
+                name="entry.123456789"
+                className="w-full bg-transparent border-b border-gray-600 focus:outline-none focus:border-main p-2 transition-colors duration-300"
                 required
+                aria-label="Full Name"
               />
             </div>
             <div>
               <label className="block mb-2 text-gray-400">E-mail</label>
               <input
                 type="email"
-                name="entry.987654321" // replace with your Google Form field ID
-                className="w-full bg-transparent border-b border-gray-600 focus:outline-none focus:border-main p-2"
+                name="entry.987654321"
+                className="w-full bg-transparent border-b border-gray-600 focus:outline-none focus:border-main p-2 transition-colors duration-300"
                 required
+                aria-label="Email Address"
               />
             </div>
           </div>
@@ -42,10 +44,12 @@ const Contact = () => {
           <div>
             <label className="block mb-2 text-gray-400">Message</label>
             <textarea
-              name="entry.1122334455" // replace with your Google Form field ID
+              name="entry.1122334455"
               rows="5"
-              className="w-full bg-transparent border-b border-gray-600 focus:outline-none focus:border-main p-2"
+              className="w-full bg-transparent border-b border-gray-600 focus:outline-none focus:border-main p-2 transition-colors duration-300 resize-none"
               required
+              aria-label="Message"
+              placeholder="Tell us about your project..."
             ></textarea>
           </div>
 
@@ -53,7 +57,7 @@ const Contact = () => {
           <div className="flex justify-center">
             <button
               type="submit"
-              className="px-8 py-3 border border-main text-main hover:bg-main hover:text-black transition rounded"
+              className="px-8 py-3 border border-main text-main hover:bg-main hover:text-black transition-all duration-300 rounded font-semibold uppercase tracking-wide hover:scale-105 transform"
             >
               SEND MESSAGE
             </button>

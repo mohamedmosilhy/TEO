@@ -6,10 +6,10 @@ import services_4 from "../assets/images/services-4.jpg";
 
 export const Services = () => {
   const services = [
-    { img: services_1, title: "Design" },
-    { img: services_2, title: "Interior" },
-    { img: services_3, title: "Planning" },
-    { img: services_4, title: "Exterior" },
+    { img: services_1, title: "Design", href: "#design" },
+    { img: services_2, title: "Interior", href: "#interior" },
+    { img: services_3, title: "Planning", href: "#planning" },
+    { img: services_4, title: "Exterior", href: "#exterior" },
   ];
 
   const cardsRef = useRef([]);
@@ -81,13 +81,15 @@ export const Services = () => {
       className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 p-0 m-0"
     >
       {services.map((service, index) => (
-        <button
+        <a
           key={index}
+          href={service.href}
           data-index={index}
           ref={(el) => (cardsRef.current[index] = el)}
-          className="relative 
+          className="relative block
             h-[30rem] sm:h-[30rem] lg:h-[26rem] 
-            overflow-hidden group border-0 focus:outline-none"
+            overflow-hidden group border-0 focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2"
+          aria-label={`View ${service.title} services`}
         >
           {/* Background Image */}
           <div
@@ -117,7 +119,7 @@ export const Services = () => {
               {service.title}
             </p>
           </div>
-        </button>
+        </a>
       ))}
     </section>
   );

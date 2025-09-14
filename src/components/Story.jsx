@@ -52,7 +52,7 @@ const Story = () => {
   }, []);
 
   return (
-    <section className="flex flex-col md:flex-row items-center gap-12 p-10 md:p-16 overflow-hidden">
+    <section className="flex flex-col md:flex-row items-center gap-12 py-20 px-8 md:px-16 overflow-hidden">
       {/* Left column: Image */}
       <div ref={imageRef} className="w-full md:w-1/2">
         <img

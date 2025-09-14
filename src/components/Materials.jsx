@@ -1,6 +1,5 @@
 import React from "react";
 
-// Example material data (replace with your real images)
 import mat1 from "../assets/images/services-1.jpg";
 import mat2 from "../assets/images/services-2.jpg";
 import mat3 from "../assets/images/services-3.jpg";
@@ -9,12 +8,12 @@ import mat5 from "../assets/images/services-1.jpg";
 import mat6 from "../assets/images/services-2.jpg";
 
 const materials = [
-  { name: "Marble", img: mat1 },
-  { name: "Wood", img: mat2 },
-  { name: "Glass", img: mat3 },
-  { name: "Steel", img: mat4 },
-  { name: "Granite", img: mat5 },
-  { name: "Concrete", img: mat6 },
+  { name: "Marble", img: mat1, description: "Elegant natural stone" },
+  { name: "Wood", img: mat2, description: "Warm timber finishes" },
+  { name: "Glass", img: mat3, description: "Modern transparency" },
+  { name: "Steel", img: mat4, description: "Industrial strength" },
+  { name: "Granite", img: mat5, description: "Durable stone surfaces" },
+  { name: "Concrete", img: mat6, description: "Contemporary textures" },
 ];
 
 const Materials = () => {
@@ -34,13 +33,24 @@ const Materials = () => {
       {/* Right column */}
       <div className="w-full md:w-2/3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {materials.map((material, index) => (
-          <div key={index} className="flex flex-col items-center text-center">
-            <img
-              src={material.img}
-              alt={material.name}
-              className="w-full h-52 object-cover shadow-lg"
-            />
-            <p className="mt-3 text-main font-semibold uppercase tracking-wide">
+          <div
+            key={index}
+            className="group flex flex-col items-center text-center cursor-pointer"
+          >
+            <div className="relative overflow-hidden rounded-lg shadow-lg mb-4">
+              <img
+                src={material.img}
+                alt={material.name}
+                className="w-full h-52 object-cover transition-transform duration-500 group-hover:scale-110"
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                <p className="text-white text-sm font-medium px-4 text-center">
+                  {material.description}
+                </p>
+              </div>
+            </div>
+            <p className="text-main font-semibold uppercase tracking-wide group-hover:text-white transition-colors duration-300">
               {material.name}
             </p>
           </div>
