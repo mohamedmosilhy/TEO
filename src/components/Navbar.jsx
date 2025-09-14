@@ -50,7 +50,7 @@ export default function Navbar() {
 
               {/* Line only on desktop when navbar is not scrolled */}
               {!scrolled && (
-                <span className="absolute -bottom-1 left-0 w-full h-[2px] bg-white hidden md:block"></span>
+                <span className="absolute -bottom-1 left-0 w-full h-[2px] bg-white block"></span>
               )}
             </div>
           </div>
@@ -58,7 +58,7 @@ export default function Navbar() {
           {/* Desktop Menu (inside navbar when scrolled) */}
           {scrolled && (
             <ul className="hidden md:flex flex-row gap-6 text-sm font-bold items-center z-10 text-main">
-              {["Home", "Projects", "Services", "Our Story", "Contact"].map(
+              {["Home", "Services", "Projects", "Our Story", "Contact"].map(
                 (item) => (
                   <li key={item}>
                     <a
@@ -97,7 +97,7 @@ export default function Navbar() {
               scrolled ? "text-main" : "text-white"
             }`}
           >
-            {["Home", "Projects", "Services", "Our Story", "Contact"].map(
+            {["Home", "Services", "Projects", "Our Story", "Contact"].map(
               (item) => (
                 <li key={item}>
                   <a
@@ -117,7 +117,7 @@ export default function Navbar() {
       {/* Hero Floating Links (before scroll only, vertical on right for large screens) */}
       {!scrolled && (
         <ul className="hidden md:flex flex-col gap-5 text-sm font-bold absolute top-24 right-10 text-white z-40">
-          {["Home", "Projects", "Services", "Our Story", "Contact"].map(
+          {["Home", "Services", "Projects", "Our Story", "Contact"].map(
             (item) => (
               <li key={item}>
                 <a

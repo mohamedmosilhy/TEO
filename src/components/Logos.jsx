@@ -52,7 +52,7 @@ export const Logos = () => {
   }, [logos]);
 
   return (
-    <div className="w-full overflow-hidden py-12">
+    <div id="clients" className="w-full overflow-hidden py-20">
       <div className="max-w-7xl mx-auto px-4">
         <div className="relative overflow-hidden rounded-2xl">
           <div
