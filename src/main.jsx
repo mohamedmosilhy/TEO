@@ -8,6 +8,10 @@ import { Logos } from "./components/Logos";
 import Projects from "./components/Projects";
 import Materials from "./components/Materials";
 import Testimonials from "./components/Testimonials";
+import Story from "./components/Story";
+import Contact from "./components/Contact";
+import InstagramGallery from "./components/InstagramGallery";
+import Footer from "./components/Footer";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -18,5 +22,9 @@ createRoot(document.getElementById("root")).render(
     <Projects />
     <Materials />
     <Testimonials />
+    <Story />
+    <Contact />
+    <InstagramGallery />
+    <Footer />
   </StrictMode>
 );
