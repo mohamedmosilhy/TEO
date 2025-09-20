@@ -1,125 +1,103 @@
 import { useEffect, useRef } from "react";
-import services_1 from "../assets/images/services-1.jpg";
-import services_2 from "../assets/images/services-2.jpg";
-import services_3 from "../assets/images/services-3.jpg";
-import services_4 from "../assets/images/services-4.jpg";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+import services_1 from "../assets/images/services/services-1.jpg";
+import services_2 from "../assets/images/services/services-2.jpg";
+import services_3 from "../assets/images/services/services-3.jpg";
+import services_4 from "../assets/images/services/services-4.jpg";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export const Services = () => {
   const services = [
-    { img: services_1, title: "Design", href: "#design" },
-    { img: services_2, title: "Interior", href: "#interior" },
-    { img: services_3, title: "Planning", href: "#planning" },
-    { img: services_4, title: "Exterior", href: "#exterior" },
+    {
+      img: services_2,
+      title: "Interior",
+      href: "#design",
+      desc: "We craft designs that merge creativity with precision. Thinkers, makers, and dreamers converge to inspire bold ideas. Every concept balances innovation with functionality, tailored to client's vision.",
+    },
+    {
+      img: services_4,
+      title: "Exterior",
+      href: "#exterior",
+      desc: "We design outdoor spaces and building facades that blend aesthetics with functionality. From landscaping to facade treatments, every exterior is crafted to complement the environment and enhance the overall architectural vision.",
+    },
+    {
+      img: services_3,
+      title: "Fitting Out",
+      href: "#fitting-out",
+      desc: "We turn raw spaces into fully realized environments. Our culture unites thinkers, makers, and dreamers to create inspiring interiors. From planning to execution, we deliver functional and aesthetic spaces.",
+    },
+    {
+      img: services_1,
+      title: "Renovation",
+      href: "#renovation",
+      desc: "We breathe new life into existing spaces with thoughtful renovation. Creativity and expertise converge to revive and reimagine environments. Every project blends modern needs with timeless character.",
+    },
   ];
 
-  const cardsRef = useRef([]);
-  const bgRefs = useRef([]);
-  const overlayRefs = useRef([]);
-  const textRefs = useRef([]);
+  const rowsRef = useRef([]);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    rowsRef.current.forEach((row, i) => {
+      if (!row) return;
 
-    let observer = null;
+      // slide left for even, right for odd
+      const fromX = i % 2 === 0 ? -100 : 100;
 
-    const setupObserver = () => {
-      // cleanup first
-      if (observer) {
-        observer.disconnect();
-        observer = null;
-      }
-
-      const isMobile = window.matchMedia("(max-width: 639px)").matches;
-
-      if (isMobile) {
-        // only observe on mobile / 1-column
-        observer = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((entry) => {
-              const index = Number(entry.target.dataset.index ?? -1);
-              if (index < 0) return;
-
-              const bg = bgRefs.current[index];
-              const overlay = overlayRefs.current[index];
-              const text = textRefs.current[index];
-
-              if (entry.isIntersecting) {
-                bg?.classList.add("scale-110");
-                overlay?.classList.add("opacity-0");
-                text?.classList.add("translate-x-6", "opacity-0");
-              } else {
-                bg?.classList.remove("scale-110");
-                overlay?.classList.remove("opacity-0");
-                text?.classList.remove("translate-x-6", "opacity-0");
-              }
-            });
+      gsap.fromTo(
+        row,
+        { opacity: 0, xPercent: fromX },
+        {
+          opacity: 1,
+          xPercent: 0,
+          duration: 1.2,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: row,
+            start: "top 80%",
+            toggleActions: "play none none reverse",
           },
-          { threshold: 0.9 }
-        );
-
-        cardsRef.current.forEach((card) => {
-          if (card) observer.observe(card);
-        });
-      }
-    };
-
-    setupObserver();
-
-    // watch for viewport changes
-    const handleResize = () => setupObserver();
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      if (observer) observer.disconnect();
-      window.removeEventListener("resize", handleResize);
-    };
+        }
+      );
+    });
   }, []);
 
   return (
     <section
       id="services"
-      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 p-0 m-0"
+      className="flex flex-col gap-12 px-6 md:px-20 py-20 overflow-x-hidden"
     >
       {services.map((service, index) => (
-        <a
+        <div
           key={index}
-          href={service.href}
-          data-index={index}
-          ref={(el) => (cardsRef.current[index] = el)}
-          className="relative block
-            h-[30rem] sm:h-[30rem] lg:h-[26rem] 
-            overflow-hidden group border-0 focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2"
-          aria-label={`View ${service.title} services`}
+          ref={(el) => {
+            if (el) rowsRef.current[index] = el;
+          }}
+          className={`flex flex-col md:flex-row items-center gap-8 ${
+            index % 2 === 1 ? "md:flex-row-reverse" : ""
+          } opacity-0`}
         >
-          {/* Background Image */}
-          <div
-            ref={(el) => (bgRefs.current[index] = el)}
-            style={{ backgroundImage: `url(${service.img})` }}
-            className="absolute inset-0 bg-cover bg-center transform transition-transform duration-700 
-              group-hover:scale-110 group-focus:scale-110 group-active:scale-110"
-          ></div>
-
-          {/* Overlay */}
-          <div
-            ref={(el) => (overlayRefs.current[index] = el)}
-            className="absolute inset-0 bg-black/90 transition-opacity duration-500 
-              group-hover:opacity-0 group-focus:opacity-0 group-active:opacity-0"
-          ></div>
+          {/* Image */}
+          <div className="flex-1 w-full">
+            <img
+              src={service.img}
+              alt={service.title}
+              className="w-full max-w-full h-64 sm:h-80 lg:h-[28rem] object-cover shadow-xl"
+            />
+          </div>
 
           {/* Text */}
-          <div className="absolute bottom-6 left-6 z-10">
-            <p
-              ref={(el) => (textRefs.current[index] = el)}
-              className="text-main font-bold text-lg lg:text-base uppercase tracking-wide 
-                transform transition-all duration-700 ease-in-out
-                group-hover:translate-x-10 group-hover:opacity-0 
-                group-focus:translate-x-10 group-focus:opacity-0 
-                group-active:translate-x-10 group-active:opacity-0"
-            >
+          <div className="flex-1 text-left max-w-lg px-2">
+            <h3 className="text-xl md:text-2xl font-bold text-main mb-4 uppercase tracking-wide">
               {service.title}
+            </h3>
+            <p className="text-sm md:text-base leading-relaxed text-gray-700">
+              {service.desc}
             </p>
           </div>
-        </a>
+        </div>
       ))}
     </section>
   );

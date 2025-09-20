@@ -18,10 +18,10 @@ const materials = [
 
 const Materials = () => {
   return (
-    <section className="flex flex-col md:flex-row gap-12 py-20 px-12 bg-black text-white">
+    <section className="flex flex-col md:flex-row gap-12 py-20 px-6 md:px-20 bg-black text-white">
       {/* Left column */}
       <div className="w-full md:w-1/3 flex flex-col items-center md:items-start text-center md:text-left">
-        <h2 className="text-3xl md:text-4xl font-bold uppercase tracking-wide text-main mb-4">
+        <h2 className="text-2xl md:text-3xl font-bold uppercase tracking-wide text-main mb-4">
           Premium <br /> Products <br /> and Materials
         </h2>
         <p className="text-gray-400 max-w-sm">

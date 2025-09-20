@@ -4,16 +4,44 @@ import gsap from "gsap";
 
 const testimonials = [
   {
-    text: "Felis donec et odio pellentesque diam volutpat commodo. Elit ullamcorper dignissim cras tincidunt.",
-    author: "CEO, Mark Nouar",
+    text: "The colors made our office feel alive. Every day we feel more creative.",
+    author: "Sara Hassan",
   },
   {
-    text: "Amazing experience! The team delivered beyond expectations with stunning results.",
-    author: "Client, Sarah Johnson",
+    text: "The fitting out gave the place balance. Now the space feels warm and welcoming.",
+    author: "Mohamed Ali",
   },
   {
-    text: "Professional, creative, and always on time. Highly recommended!",
-    author: "Founder, Alex Brown",
+    text: "Our home feels completely new after the renovation. The design lifts our mood every day.",
+    author: "Omar Khaled",
+  },
+  {
+    text: "Calm, elegant, and practical. The design helps us focus without stress.",
+    author: "Mona El-Sayed",
+  },
+  {
+    text: "The colors and details boosted our team’s energy. We can feel the change.",
+    author: "Ahmed Samir",
+  },
+  {
+    text: "They turned our house into a real home. Simple touches but very powerful.",
+    author: "Nour Ahmed",
+  },
+  {
+    text: "Clients feel relaxed the moment they walk in. The design really works.",
+    author: "Hany Mostafa",
+  },
+  {
+    text: "The interior feels stylish and positive. It’s both beautiful and useful.",
+    author: "Aya Ibrahim",
+  },
+  {
+    text: "Our shop feels modern and calm at the same time. People love it.",
+    author: "Youssef Adel",
+  },
+  {
+    text: "Every corner feels like it has a story. Very thoughtful work.",
+    author: "Laila Hossam",
   },
 ];
 
@@ -26,17 +54,17 @@ const Testimonials = () => {
     if (textRef.current) {
       gsap.fromTo(
         textRef.current,
-        { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 1, ease: "power3.out" }
+        { opacity: 0, y: 40, scale: 0.95 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.9, ease: "power3.out" }
       );
     }
   }, [activeIndex]);
 
-  // Auto-play every 4 seconds with pause on hover
+  // Auto-play every 5 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % testimonials.length);
-    }, 4000);
+    }, 5000);
 
     return () => clearInterval(interval);
   }, []);
@@ -52,35 +80,34 @@ const Testimonials = () => {
   }, []);
 
   return (
-    <section className="bg-black text-white py-20 relative flex flex-col items-center justify-center overflow-hidden">
+    <section className="bg-black text-white py-20 px-6 md:px-20 relative flex flex-col items-center justify-center overflow-hidden">
       {/* Arrows */}
       <button
         onClick={prevTestimonial}
-        className="absolute left-8 text-main text-xl hover:text-white transition-colors duration-300 hover:scale-110 transform"
+        className="absolute left-6 md:left-12 text-main text-2xl hover:text-white transition-all duration-300 hover:scale-125"
         aria-label="Previous testimonial"
       >
         <FaArrowLeft />
       </button>
 
-      <div ref={textRef} className="max-w-4xl text-center px-6">
-        <div className="relative">
-          <p className="text-lg md:text-xl text-main leading-relaxed italic mb-6">
-            "{testimonials[activeIndex].text}"
-          </p>
-          <p className="text-gray-400 text-sm font-medium">
-            — {testimonials[activeIndex].author}
-          </p>
-        </div>
+      {/* Testimonial text */}
+      <div ref={textRef} className="max-w-3xl text-center px-6">
+        <p className="text-base md:text-lg text-main leading-relaxed italic mb-6">
+          "{testimonials[activeIndex].text}"
+        </p>
+        <p className="text-gray-400 text-sm md:text-base font-medium">
+          — {testimonials[activeIndex].author}
+        </p>
 
         {/* Dots indicator */}
-        <div className="flex justify-center mt-8 gap-2">
+        <div className="flex justify-center mt-8 gap-2 flex-wrap">
           {testimonials.map((_, index) => (
             <button
               key={index}
               onClick={() => setActiveIndex(index)}
-              className={`w-2 h-2 rounded-full transition-all duration-300 ${
+              className={`w-3 h-3 rounded-full transition-all duration-300 ${
                 index === activeIndex
-                  ? "bg-main scale-125"
+                  ? "bg-main scale-125 shadow-md"
                   : "bg-gray-600 hover:bg-gray-400"
               }`}
               aria-label={`Go to testimonial ${index + 1}`}
@@ -89,9 +116,10 @@ const Testimonials = () => {
         </div>
       </div>
 
+      {/* Right arrow */}
       <button
         onClick={nextTestimonial}
-        className="absolute right-8 text-main text-xl hover:text-white transition-colors duration-300 hover:scale-110 transform"
+        className="absolute right-6 md:right-12 text-main text-2xl hover:text-white transition-all duration-300 hover:scale-125"
         aria-label="Next testimonial"
       >
         <FaArrowRight />

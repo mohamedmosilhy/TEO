@@ -300,7 +300,7 @@ const Projects = () => {
   return (
     <section
       id="projects"
-      className="flex flex-col md:flex-row gap-8 items-center md:items-stretch py-20 px-8"
+      className="flex flex-col md:flex-row gap-8 items-center md:items-stretch py-20 px-6 md:px-20"
     >
       {/* Left side image (2/3 width) */}
       <div className="w-full md:w-2/3 flex items-center justify-center">
@@ -318,7 +318,7 @@ const Projects = () => {
 
       {/* Right side project list (1/3 width, centered) */}
       <div className="w-full md:w-1/3 flex flex-col justify-center items-center gap-6 text-center text-lg">
-        <h2 className="text-3xl md:text-4xl font-bold text-main mb-8 uppercase tracking-wide">
+        <h2 className="text-2xl md:text-3xl font-bold text-main mb-8 uppercase tracking-wide">
           Our Projects
         </h2>
         {projects.map((project, index) => (
@@ -332,7 +332,7 @@ const Projects = () => {
               ref={(el) => {
                 if (el) namesRef.current[index] = el;
               }}
-              className={`transition-all duration-300 text-xl ${
+              className={`transition-all duration-300 text-lg md:text-xl ${
                 activeIndex === index
                   ? "text-main font-semibold scale-105"
                   : "text-main/70 hover:text-main hover:scale-105"
@@ -341,7 +341,7 @@ const Projects = () => {
               {project.name}
             </p>
             <p
-              className={`text-sm text-gray-400 mt-1 transition-opacity duration-300 ${
+              className={`text-xs md:text-sm text-gray-400 mt-1 transition-opacity duration-300 ${
                 activeIndex === index ? "opacity-100" : "opacity-0"
               }`}
             >

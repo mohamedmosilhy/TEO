@@ -35,7 +35,7 @@ export default function Navbar() {
               <img
                 src={logo}
                 alt="logo"
-                className="w-12 rounded transition-transform duration-300 hover:scale-105"
+                className="w-12  transition-transform duration-300 hover:scale-105"
               />
             </a>
 

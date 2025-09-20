@@ -4,9 +4,8 @@ import "./index.css";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import { Services } from "./components/Services";
-import { Logos } from "./components/Logos";
+import Stats from "./components/Stats";
 import Projects from "./components/Projects";
-import Materials from "./components/Materials";
 import Testimonials from "./components/Testimonials";
 import Story from "./components/Story";
 import Contact from "./components/Contact";
@@ -18,13 +17,11 @@ createRoot(document.getElementById("root")).render(
     <Navbar />
     <Hero />
     <Services />
-    <Logos />
+    <Stats />
     <Projects />
-    <Materials />
     <Testimonials />
     <Story />
     <Contact />
-    <InstagramGallery />
     <Footer />
   </StrictMode>
 );
