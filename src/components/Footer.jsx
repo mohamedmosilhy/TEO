@@ -20,7 +20,7 @@ const Footer = () => {
               className="w-16 h-16 object-contain"
             />
             <h3 className="text-lg font-semibold uppercase tracking-wider">
-              TEO Architecture
+              Technical Engineering Office
             </h3>
             <p className="text-gray-400 text-sm leading-relaxed max-w-xs">
               Creating exceptional architectural experiences that blend
@@ -108,7 +108,7 @@ const Footer = () => {
         {/* Bottom Section */}
         <div className="flex flex-col sm:flex-row justify-center sm:justify-between items-center gap-6 pt-8 border-t border-gray-800 w-full">
           <p className="text-gray-500 text-xs text-center sm:text-left order-2 sm:order-1">
-            © {new Date().getFullYear()} TEO Architecture — All Rights Reserved
+            © {new Date().getFullYear()} TEO — All Rights Reserved
           </p>
           <button
             onClick={scrollToTop}

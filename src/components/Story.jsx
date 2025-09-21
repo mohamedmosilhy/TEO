@@ -115,7 +115,7 @@ const Story = () => {
         <div className="w-full md:w-1/2 text-gray-300 text-sm md:text-base leading-relaxed space-y-6">
           <p>
             Following his passing, the mantle was taken up by his son,{" "}
-            <strong>Eng. Ahmed Abdel Mohaimen</strong>. With over two decades of
+            <strong>Architect. Ahmed Abdel Mohaimen</strong>. With over two decades of
             consultancy and leadership in mega-scale developments, he infused
             TEO with renewed vision—merging technical mastery and meticulous
             approach with his father's timeless principles.

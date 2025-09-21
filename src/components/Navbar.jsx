@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { HashLink } from "react-router-hash-link";
 import { Menu, X } from "lucide-react";
 import logo from "../assets/images/logo.jpg";
 
@@ -22,14 +23,10 @@ export default function Navbar() {
   // Close mobile menu on route change
   useEffect(() => setIsOpen(false), [location]);
 
-  // Helper to create links, adapting hash links for non-home pages
+  // Helper to create links
   const createLink = (label, to) => {
-    if (to.startsWith("#")) {
-      return {
-        label,
-        to: isNotHomePage ? `/${to}` : to,
-        isHash: true,
-      };
+    if (to.includes("#")) {
+      return { label, to, isHash: true };
     }
     return { label, to, isHash: false };
   };
@@ -38,8 +35,8 @@ export default function Navbar() {
     createLink("HOME", "/TEO/"),
     createLink("TEO SPECIALTIES", "/teo-specialties/"),
     createLink("PROJECTS", "/projects/"),
-    createLink("TEO STORY", "#our-story"),
-    createLink("CONTACT", "#contact"),
+    createLink("TEO STORY", "/TEO/#our-story"),
+    createLink("CONTACT", "/TEO/#contact"),
   ];
 
   // Centralized link rendering
@@ -47,15 +44,16 @@ export default function Navbar() {
     links.map(({ label, to, isHash }) =>
       isHash ? (
         <li key={label}>
-          <a
-            href={to}
+          <HashLink
+            smooth
+            to={to}
             onClick={isMobile ? () => setIsOpen(false) : undefined}
             className={`hover:underline underline-offset-8 decoration-2 decoration-light/50 transition-colors duration-300 ${
               useTextMain ? "text-main" : "text-white"
             }`}
           >
             {label}
-          </a>
+          </HashLink>
         </li>
       ) : (
         <li key={label}>

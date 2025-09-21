@@ -1,5 +1,12 @@
 import { useState, useEffect, useRef, useCallback, memo } from "react";
-import { X, ChevronLeft, ChevronRight, Play, Pause } from "lucide-react";
+import {
+  X,
+  ChevronLeft,
+  ChevronRight,
+  Play,
+  Pause,
+  ZoomIn,
+} from "lucide-react";
 import gsap from "gsap";
 
 const ProjectModal = memo(({ isOpen, selectedProject, onClose }) => {
@@ -53,16 +60,12 @@ const ProjectModal = memo(({ isOpen, selectedProject, onClose }) => {
           prev === selectedProject.images.length - 1 ? 0 : prev + 1
         );
       }, 3000);
-    } else {
-      if (autoPlayRef.current) {
-        clearInterval(autoPlayRef.current);
-      }
+    } else if (autoPlayRef.current) {
+      clearInterval(autoPlayRef.current);
     }
 
     return () => {
-      if (autoPlayRef.current) {
-        clearInterval(autoPlayRef.current);
-      }
+      if (autoPlayRef.current) clearInterval(autoPlayRef.current);
     };
   }, [isAutoPlay, selectedProject]);
 
@@ -85,6 +88,17 @@ const ProjectModal = memo(({ isOpen, selectedProject, onClose }) => {
     }
   }, [onClose]);
 
+  // Animate modal open
+  useEffect(() => {
+    if (isOpen && modalRef.current) {
+      gsap.fromTo(
+        modalRef.current,
+        { opacity: 0, scale: 0.8, y: 50 },
+        { opacity: 1, scale: 1, y: 0, duration: 0.4, ease: "power3.out" }
+      );
+    }
+  }, [isOpen]);
+
   // Handle keyboard navigation
   const handleKeyDown = useCallback(
     (e) => {
@@ -105,15 +119,11 @@ const ProjectModal = memo(({ isOpen, selectedProject, onClose }) => {
             break;
           case " ":
             e.preventDefault();
-            if (!isZoomed) {
-              toggleAutoPlay();
-            }
+            if (!isZoomed) toggleAutoPlay();
             break;
           case "z":
           case "Z":
-            if (!isZoomed) {
-              toggleZoom();
-            }
+            toggleZoom();
             break;
         }
       }
@@ -135,14 +145,12 @@ const ProjectModal = memo(({ isOpen, selectedProject, onClose }) => {
       document.addEventListener("keydown", handleKeyDown);
       document.body.style.overflow = "hidden";
     }
-
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
       document.body.style.overflow = "unset";
     };
   }, [isOpen, handleKeyDown]);
 
-  // Reset state when modal opens
   useEffect(() => {
     if (isOpen && selectedProject) {
       setCurrentImageIndex(0);
@@ -156,14 +164,14 @@ const ProjectModal = memo(({ isOpen, selectedProject, onClose }) => {
   return (
     <>
       {/* Main Modal */}
-      <div className="fixed inset-0 bg-black/95 backdrop-blur-xl z-50 flex items-center justify-center p-4">
+      <div className="fixed inset-0 bg-black/90 backdrop-blur-xl z-50 flex items-center justify-center p-4">
         <div
           ref={modalRef}
-          className="bg-black/95 border border-main/20 rounded-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden shadow-2xl"
+          className="bg-black/95 border border-main/30 rounded-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden shadow-[0_0_25px_rgba(0,0,0,0.8)]"
         >
           {/* Modal Header */}
           <div className="flex justify-between items-center p-6 border-b border-main/20">
-            <h2 className="text-2xl md:text-3xl font-bold text-white">
+            <h2 className="text-2xl md:text-3xl font-bold text-main drop-shadow-md">
               {selectedProject.title}
             </h2>
             <button
@@ -179,10 +187,7 @@ const ProjectModal = memo(({ isOpen, selectedProject, onClose }) => {
             <div className="p-6">
               <div className="relative">
                 {/* Main Image */}
-                <div
-                  className="relative overflow-hidden rounded-xl cursor-pointer group"
-                  onClick={toggleZoom}
-                >
+                <div className="relative overflow-hidden rounded-xl group">
                   {isImageLoading && (
                     <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-20">
                       <div className="w-8 h-8 border-2 border-main/30 border-t-main rounded-full animate-spin"></div>
@@ -194,7 +199,7 @@ const ProjectModal = memo(({ isOpen, selectedProject, onClose }) => {
                     alt={`${selectedProject.title} - Image ${
                       currentImageIndex + 1
                     }`}
-                    className={`w-full h-96 md:h-[500px] object-cover transition-all duration-700 ${
+                    className={`w-full h-[450px] md:h-[650px] object-cover transition-all duration-700 rounded-xl ${
                       isImageLoading
                         ? "opacity-50 scale-105"
                         : "opacity-100 scale-100"
@@ -204,25 +209,33 @@ const ProjectModal = memo(({ isOpen, selectedProject, onClose }) => {
                   {/* Navigation Arrows */}
                   <button
                     onClick={prevImage}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/60 backdrop-blur-sm text-white p-3 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-main/80"
+                    className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/70 backdrop-blur-sm text-white p-3 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-main/80"
                   >
                     <ChevronLeft size={20} />
                   </button>
 
                   <button
                     onClick={nextImage}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/60 backdrop-blur-sm text-white p-3 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-main/80"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/70 backdrop-blur-sm text-white p-3 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-main/80"
                   >
                     <ChevronRight size={20} />
                   </button>
 
-                  {/* Auto-play Button */}
-                  <div className="absolute bottom-4 right-4">
+                  {/* Controls (bottom right) */}
+                  <div className="absolute bottom-4 right-4 flex gap-3">
+                    {/* Auto-play */}
                     <button
                       onClick={toggleAutoPlay}
                       className="bg-black/80 backdrop-blur-sm text-white p-2 rounded-full border border-main/30 hover:bg-main/20 transition-all duration-300"
                     >
                       {isAutoPlay ? <Pause size={16} /> : <Play size={16} />}
+                    </button>
+                    {/* Zoom */}
+                    <button
+                      onClick={toggleZoom}
+                      className="bg-black/80 backdrop-blur-sm text-white p-2 rounded-full border border-main/30 hover:bg-main/20 transition-all duration-300"
+                    >
+                      <ZoomIn size={16} />
                     </button>
                   </div>
 
@@ -266,7 +279,7 @@ const ProjectModal = memo(({ isOpen, selectedProject, onClose }) => {
             <img
               src={selectedProject.images[currentImageIndex]}
               alt={`${selectedProject.title} - Zoomed`}
-              className="max-w-full max-h-full object-contain"
+              className="max-w-full max-h-full object-contain drop-shadow-lg"
             />
 
             <button

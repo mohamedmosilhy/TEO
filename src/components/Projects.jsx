@@ -32,10 +32,10 @@ const Projects = memo(() => {
         {/* Header */}
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-main mb-6 uppercase tracking-wide">
-            Our Projects
+            TEO Projects
           </h2>
           <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-            Discover our portfolio of innovative architectural solutions and
+            Discover TEO's portfolio of innovative architectural solutions and
             design excellence
           </p>
         </div>
