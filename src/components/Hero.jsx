@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import gsap from "gsap";
 
 import background from "../assets/images/hero/2.jpeg";
@@ -12,22 +12,21 @@ export default function Hero() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const bgRef = useRef(null);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      gsap.to(bgRef.current, {
-        opacity: 0,
-        duration: 1,
-        onComplete: () => {
-          setCurrentIndex((prev) =>
-            prev === images.length - 1 ? 0 : prev + 1
-          );
-          gsap.to(bgRef.current, { opacity: 1, duration: 1 });
-        },
-      });
-    }, 3000);
-
-    return () => clearInterval(interval);
+  const changeImage = useCallback(() => {
+    gsap.to(bgRef.current, {
+      opacity: 0,
+      duration: 1,
+      onComplete: () => {
+        setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+        gsap.to(bgRef.current, { opacity: 1, duration: 1 });
+      },
+    });
   }, []);
+
+  useEffect(() => {
+    const interval = setInterval(changeImage, 3000);
+    return () => clearInterval(interval);
+  }, [changeImage]);
 
   return (
     <section id="home" className="relative w-full h-screen overflow-hidden">

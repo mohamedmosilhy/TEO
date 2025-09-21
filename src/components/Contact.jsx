@@ -112,7 +112,6 @@ const Contact = () => {
               rows="5"
               className="w-full bg-transparent border-b border-gray-600 focus:outline-none focus:border-main p-2 transition-colors duration-300 resize-none"
               required
-              placeholder="Tell us about your project..."
             ></textarea>
           </div>
 

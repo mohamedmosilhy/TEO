@@ -18,30 +18,34 @@ export const Stats = () => {
   const refs = useRef([]);
 
   useEffect(() => {
-    refs.current.forEach((el, i) => {
-      if (!el) return;
+    const ctx = gsap.context(() => {
+      refs.current.forEach((el, i) => {
+        if (!el) return;
 
-      const finalValue = stats[i].value;
+        const finalValue = stats[i].value;
 
-      gsap.fromTo(
-        el,
-        { innerText: 0 },
-        {
-          innerText: finalValue,
-          duration: 2,
-          ease: "power1.out",
-          snap: { innerText: 1 },
-          scrollTrigger: {
-            trigger: el,
-            start: "top 80%",
-            once: true, // ✅ ensures animation runs only once
-          },
-          onUpdate: function () {
-            el.innerText = Math.floor(el.innerText) + stats[i].suffix;
-          },
-        }
-      );
+        gsap.fromTo(
+          el,
+          { innerText: 0 },
+          {
+            innerText: finalValue,
+            duration: 2,
+            ease: "power1.out",
+            snap: { innerText: 1 },
+            scrollTrigger: {
+              trigger: el,
+              start: "top 80%",
+              once: true, // ✅ ensures animation runs only once
+            },
+            onUpdate: function () {
+              el.innerText = Math.floor(el.innerText) + stats[i].suffix;
+            },
+          }
+        );
+      });
     });
+
+    return () => ctx.revert();
   }, [stats]);
 
   return (

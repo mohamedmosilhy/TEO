@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, memo } from "react";
 import {
   X,
   MapPin,
@@ -112,7 +112,11 @@ const projects = [
   },
 ];
 
-const Projects = () => {
+// resdential => design , real
+// commercial => design , real
+// landscaping => design , real
+
+const Projects = memo(() => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [selectedProject, setSelectedProject] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -246,8 +250,8 @@ const Projects = () => {
   }, []);
 
   // Handle keyboard navigation
-  useEffect(() => {
-    const handleKeyDown = (e) => {
+  const handleKeyDown = useCallback(
+    (e) => {
       if (isModalOpen && selectedProject) {
         switch (e.key) {
           case "Escape":
@@ -277,8 +281,20 @@ const Projects = () => {
             break;
         }
       }
-    };
+    },
+    [
+      isModalOpen,
+      selectedProject,
+      closeModal,
+      prevImage,
+      nextImage,
+      isZoomed,
+      toggleAutoPlay,
+      toggleZoom,
+    ]
+  );
 
+  useEffect(() => {
     if (isModalOpen) {
       document.addEventListener("keydown", handleKeyDown);
     }
@@ -286,16 +302,7 @@ const Projects = () => {
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [
-    isModalOpen,
-    selectedProject,
-    closeModal,
-    prevImage,
-    nextImage,
-    isZoomed,
-    toggleAutoPlay,
-    toggleZoom,
-  ]);
+  }, [isModalOpen, handleKeyDown]);
 
   return (
     <section
@@ -319,7 +326,7 @@ const Projects = () => {
       {/* Right side project list (1/3 width, centered) */}
       <div className="w-full md:w-1/3 flex flex-col justify-center items-center gap-6 text-center text-lg">
         <h2 className="text-2xl md:text-3xl font-bold text-main mb-8 uppercase tracking-wide">
-          Our Projects
+          Projects
         </h2>
         {projects.map((project, index) => (
           <div
@@ -722,6 +729,8 @@ const Projects = () => {
       )}
     </section>
   );
-};
+});
+
+Projects.displayName = "Projects";
 
 export default Projects;

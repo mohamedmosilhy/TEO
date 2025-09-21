@@ -6,4 +6,27 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   base: "/TEO/",
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ["react", "react-dom"],
+          router: ["react-router-dom"],
+          gsap: ["gsap"],
+          icons: ["lucide-react", "react-icons"],
+        },
+      },
+    },
+    chunkSizeWarningLimit: 1000,
+    sourcemap: false,
+    minify: "esbuild",
+  },
+  server: {
+    port: 3000,
+    open: true,
+  },
+  preview: {
+    port: 3000,
+    open: true,
+  },
 });

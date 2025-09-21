@@ -131,62 +131,6 @@ const Story = () => {
           </p>
         </div>
       </div>
-
-      {/* Extra Section: Specialties / Vision / Mission */}
-      <div className="max-w-4xl mx-auto text-center text-gray-300 space-y-12 mt-16">
-        <div>
-          <h3 className="text-xl md:text-2xl font-bold text-main mb-6 uppercase tracking-wide">
-            Our Specialties
-          </h3>
-          <p className="text-sm md:text-base leading-relaxed">
-            At TEO, the client's dream becomes a reality. We make it our top
-            priority to accompany our client from the starting point of choosing
-            the location, based off accurate recommendations and technical
-            views, to the final piece of furniture added.
-          </p>
-          <p className="text-sm md:text-base leading-relaxed mt-4">
-            Along these ends, we offer landscaping and designing services, with
-            consultations for immaculately paired interior design. This is
-            matched and completed with a psychological finish by professionals,
-            to ensure your comfort zone engulfs your reality. We see how diverse
-            everyone is, and we put effort into being the first to mirror one's
-            inside thoughts and feelings, with where they feel most comfortable.
-          </p>
-          <p className="text-sm md:text-base leading-relaxed mt-4">
-            Undoubtedly, all of our services are completed by professionals with
-            immense attention to details, and an extreme knowledge base that has
-            been gained over more than two decades. Keeping the tradition of the
-            ultimate trust and heavenly touches alive, TEO strives to ensure
-            Egyptian homes, buildings and architecture, stands uniquely with its
-            own personality, aesthetic and ambiance, to reflect the modern
-            retouch being embedded in our current society and culture.
-          </p>
-        </div>
-
-        <div className="grid sm:grid-cols-2 gap-12 mt-12">
-          {/* Vision */}
-          <div className="bg-neutral-800/50 p-6 rounded-2xl shadow-lg hover:shadow-[0_0_30px_rgba(0,0,0,0.6)] transition">
-            <h4 className="text-lg md:text-xl font-semibold text-main mb-3 uppercase">
-              End Goal (Vision)
-            </h4>
-            <p className="text-sm md:text-base leading-relaxed">
-              At TEO, our main priority is to completely customize homes,
-              venturing psychological factors into architectural creations.
-            </p>
-          </div>
-
-          {/* Mission */}
-          <div className="bg-neutral-800/50 p-6 rounded-2xl shadow-lg hover:shadow-[0_0_30px_rgba(0,0,0,0.6)] transition">
-            <h4 className="text-lg md:text-xl font-semibold text-main mb-3 uppercase">
-              Road to Goal (Mission)
-            </h4>
-            <p className="text-sm md:text-base leading-relaxed">
-              Encouraging the beliefs of our clients, by turning them into
-              reality from start to finish.
-            </p>
-          </div>
-        </div>
-      </div>
     </section>
   );
 };

@@ -40,28 +40,32 @@ export const Services = () => {
   const rowsRef = useRef([]);
 
   useEffect(() => {
-    rowsRef.current.forEach((row, i) => {
-      if (!row) return;
+    const ctx = gsap.context(() => {
+      rowsRef.current.forEach((row, i) => {
+        if (!row) return;
 
-      // slide left for even, right for odd
-      const fromX = i % 2 === 0 ? -100 : 100;
+        // slide left for even, right for odd
+        const fromX = i % 2 === 0 ? -100 : 100;
 
-      gsap.fromTo(
-        row,
-        { opacity: 0, xPercent: fromX },
-        {
-          opacity: 1,
-          xPercent: 0,
-          duration: 1.2,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: row,
-            start: "top 80%",
-            toggleActions: "play none none reverse",
-          },
-        }
-      );
+        gsap.fromTo(
+          row,
+          { opacity: 0, xPercent: fromX },
+          {
+            opacity: 1,
+            xPercent: 0,
+            duration: 1.2,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: row,
+              start: "top 80%",
+              toggleActions: "play none none reverse",
+            },
+          }
+        );
+      });
     });
+
+    return () => ctx.revert();
   }, []);
 
   return (
