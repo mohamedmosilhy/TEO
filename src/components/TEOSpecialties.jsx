@@ -67,24 +67,24 @@ const TEOSpecialties = () => {
           </div>
 
           {/* Goals Section */}
-          <div className="grid sm:grid-cols-2 gap-8 mt-16">
+          <div className="grid sm:grid-cols-2 gap-8 mt-16 text-gray-300">
             {/* End Goal */}
-            <div className="bg-neutral-800/50 p-8 rounded-2xl shadow-lg hover:shadow-[0_0_30px_rgba(0,0,0,0.6)] transition-all duration-300 hover:scale-105">
+            <div className="p-8">
               <h4 className="text-xl md:text-2xl font-semibold text-main mb-4 uppercase tracking-wide">
                 End Goal
               </h4>
-              <p className="text-sm md:text-base leading-relaxed text-gray-300">
+              <p className="text-sm md:text-base leading-relaxed">
                 At TEO, our main priority is to completely customize homes,
                 venturing psychological factors into architectural creations.
               </p>
             </div>
 
             {/* Road to Goal */}
-            <div className="bg-neutral-800/50 p-8 rounded-2xl shadow-lg hover:shadow-[0_0_30px_rgba(0,0,0,0.6)] transition-all duration-300 hover:scale-105">
+            <div className="p-8">
               <h4 className="text-xl md:text-2xl font-semibold text-main mb-4 uppercase tracking-wide">
                 Road to Goal
               </h4>
-              <p className="text-sm md:text-base leading-relaxed text-gray-300">
+              <p className="text-sm md:text-base leading-relaxed">
                 Encouraging the beliefs of our clients, by turning them into
                 reality from start to finish.
               </p>
