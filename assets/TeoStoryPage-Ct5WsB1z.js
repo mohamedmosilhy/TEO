@@ -1,1 +1,0 @@
-import{j as r,a as t}from"./index-Dao3kMmR.js";import"./router-DW0CDFo1.js";import"./vendor-gH-7aFTg.js";import"./icons-7gOw8oYf.js";import"./gsap-DKtf60Sy.js";const m=()=>r.jsx("div",{className:"min-h-screen bg-black",children:r.jsx(t,{})});export{m as default};
