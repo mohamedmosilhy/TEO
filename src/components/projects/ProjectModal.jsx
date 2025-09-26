@@ -18,6 +18,7 @@ const ProjectModal = memo(({ isOpen, selectedProject, onClose }) => {
   const modalRef = useRef(null);
   const autoPlayRef = useRef(null);
 
+  // ---- Image Controls ----
   const nextImage = useCallback(() => {
     if (selectedProject) {
       setIsImageLoading(true);
@@ -38,43 +39,32 @@ const ProjectModal = memo(({ isOpen, selectedProject, onClose }) => {
     }
   }, [selectedProject]);
 
-  const selectImage = useCallback((index) => {
+  const selectImage = (index) => {
     setIsImageLoading(true);
     setCurrentImageIndex(index);
     setTimeout(() => setIsImageLoading(false), 300);
-  }, []);
+  };
 
-  const toggleZoom = useCallback(() => {
-    setIsZoomed((prev) => !prev);
-  }, []);
+  // ---- Zoom & AutoPlay ----
+  const toggleZoom = () => setIsZoomed((prev) => !prev);
+  const toggleAutoPlay = () => setIsAutoPlay((prev) => !prev);
 
-  const toggleAutoPlay = useCallback(() => {
-    setIsAutoPlay((prev) => !prev);
-  }, []);
-
-  // Auto-play functionality
   useEffect(() => {
-    if (isAutoPlay && selectedProject && selectedProject.images.length > 1) {
-      autoPlayRef.current = setInterval(() => {
-        setCurrentImageIndex((prev) =>
-          prev === selectedProject.images.length - 1 ? 0 : prev + 1
-        );
-      }, 3000);
-    } else if (autoPlayRef.current) {
+    if (isAutoPlay && selectedProject?.images?.length > 1) {
+      autoPlayRef.current = setInterval(nextImage, 3000);
+    } else {
       clearInterval(autoPlayRef.current);
     }
+    return () => clearInterval(autoPlayRef.current);
+  }, [isAutoPlay, nextImage, selectedProject]);
 
-    return () => {
-      if (autoPlayRef.current) clearInterval(autoPlayRef.current);
-    };
-  }, [isAutoPlay, selectedProject]);
-
+  // ---- Open/Close Animations ----
   const closeModal = useCallback(() => {
     if (modalRef.current) {
       gsap.to(modalRef.current, {
         opacity: 0,
-        scale: 0.8,
-        y: 50,
+        scale: 0.9,
+        y: 30,
         duration: 0.3,
         ease: "power3.out",
         onComplete: () => {
@@ -88,75 +78,27 @@ const ProjectModal = memo(({ isOpen, selectedProject, onClose }) => {
     }
   }, [onClose]);
 
-  // Animate modal open
   useEffect(() => {
     if (isOpen && modalRef.current) {
       gsap.fromTo(
         modalRef.current,
-        { opacity: 0, scale: 0.8, y: 50 },
+        { opacity: 0, scale: 0.9, y: 30 },
         { opacity: 1, scale: 1, y: 0, duration: 0.4, ease: "power3.out" }
       );
     }
   }, [isOpen]);
 
-  // Handle keyboard navigation
-  const handleKeyDown = useCallback(
-    (e) => {
-      if (isOpen && selectedProject) {
-        switch (e.key) {
-          case "Escape":
-            if (isZoomed) {
-              setIsZoomed(false);
-            } else {
-              closeModal();
-            }
-            break;
-          case "ArrowLeft":
-            prevImage();
-            break;
-          case "ArrowRight":
-            nextImage();
-            break;
-          case " ":
-            e.preventDefault();
-            if (!isZoomed) toggleAutoPlay();
-            break;
-          case "z":
-          case "Z":
-            toggleZoom();
-            break;
-        }
-      }
-    },
-    [
-      isOpen,
-      selectedProject,
-      closeModal,
-      prevImage,
-      nextImage,
-      isZoomed,
-      toggleAutoPlay,
-      toggleZoom,
-    ]
-  );
-
+  // ---- Reset State on Open ----
   useEffect(() => {
     if (isOpen) {
-      document.addEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = "hidden";
-    }
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = "unset";
-    };
-  }, [isOpen, handleKeyDown]);
-
-  useEffect(() => {
-    if (isOpen && selectedProject) {
       setCurrentImageIndex(0);
       setIsAutoPlay(false);
       setIsZoomed(false);
+      document.body.style.overflow = "hidden";
     }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
   }, [isOpen, selectedProject]);
 
   if (!isOpen || !selectedProject) return null;
@@ -164,108 +106,100 @@ const ProjectModal = memo(({ isOpen, selectedProject, onClose }) => {
   return (
     <>
       {/* Main Modal */}
-      <div className="fixed inset-0 bg-black/90 backdrop-blur-xl z-50 flex items-center justify-center p-4">
+      <div className="fixed inset-0 bg-black/90 backdrop-blur-lg z-50 flex items-center justify-center p-4">
         <div
           ref={modalRef}
-          className="bg-black/95 border border-main/30 rounded-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden shadow-[0_0_25px_rgba(0,0,0,0.8)]"
+          className="bg-black/95 border border-main/30 rounded-2xl max-w-6xl w-full max-h-[90vh] flex flex-col overflow-hidden shadow-[0_0_25px_rgba(0,0,0,0.8)]"
         >
-          {/* Modal Header */}
-          <div className="flex justify-between items-center p-6 border-b border-main/20">
-            <h2 className="text-2xl md:text-3xl font-bold text-main drop-shadow-md">
+          {/* Sticky Header */}
+          <div className="flex justify-between items-center p-6 border-b border-main/20 sticky top-0 bg-black/95 z-10">
+            <h2 className="text-xl md:text-2xl font-bold text-main">
               {selectedProject.title}
             </h2>
             <button
               onClick={closeModal}
-              className="text-gray-400 hover:text-white transition-colors duration-300 p-2 hover:bg-main/20 rounded-full"
+              className="text-gray-400 hover:text-white transition p-2 hover:bg-main/20 rounded-full"
             >
-              <X size={24} />
+              <X size={22} />
             </button>
           </div>
 
-          {/* Scrollable Gallery */}
-          <div className="overflow-y-auto max-h-[calc(90vh-120px)]">
-            <div className="p-6">
-              <div className="relative">
-                {/* Main Image */}
-                <div className="relative overflow-hidden rounded-xl group">
-                  {isImageLoading && (
-                    <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-20">
-                      <div className="w-8 h-8 border-2 border-main/30 border-t-main rounded-full animate-spin"></div>
-                    </div>
-                  )}
+          {/* Content */}
+          <div className="flex-1 overflow-y-auto">
+            <div className="p-6 flex flex-col gap-6">
+              {/* Main Image */}
+              <div className="relative rounded-xl overflow-hidden group">
+                {isImageLoading && (
+                  <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-20">
+                    <div className="w-8 h-8 border-2 border-main/30 border-t-main rounded-full animate-spin"></div>
+                  </div>
+                )}
 
-                  <img
-                    src={selectedProject.images[currentImageIndex]}
-                    alt={`${selectedProject.title} - Image ${
-                      currentImageIndex + 1
-                    }`}
-                    className={`w-full h-[450px] md:h-[650px] object-cover transition-all duration-700 rounded-xl ${
-                      isImageLoading
-                        ? "opacity-50 scale-105"
-                        : "opacity-100 scale-100"
-                    }`}
-                  />
+                <img
+                  src={selectedProject.images[currentImageIndex]}
+                  alt={`${selectedProject.title} - ${currentImageIndex + 1}`}
+                  className={`w-full max-h-[70vh] md:max-h-[75vh] object-contain rounded-lg transition-all duration-700 ${
+                    isImageLoading
+                      ? "opacity-50 scale-105"
+                      : "opacity-100 scale-100"
+                  }`}
+                />
 
-                  {/* Navigation Arrows */}
-                  <button
-                    onClick={prevImage}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/70 backdrop-blur-sm text-white p-3 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-main/80"
-                  >
-                    <ChevronLeft size={20} />
-                  </button>
-
-                  <button
-                    onClick={nextImage}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/70 backdrop-blur-sm text-white p-3 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-main/80"
-                  >
-                    <ChevronRight size={20} />
-                  </button>
-
-                  {/* Controls (bottom right) */}
-                  <div className="absolute bottom-4 right-4 flex gap-3">
-                    {/* Auto-play */}
+                {/* Overlay Controls */}
+                <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/70 via-black/30 to-transparent flex justify-between items-center">
+                  <span className="text-white text-sm px-3 py-1 bg-black/60 rounded-full">
+                    {currentImageIndex + 1} / {selectedProject.images.length}
+                  </span>
+                  <div className="flex gap-2">
                     <button
                       onClick={toggleAutoPlay}
-                      className="bg-black/80 backdrop-blur-sm text-white p-2 rounded-full border border-main/30 hover:bg-main/20 transition-all duration-300"
+                      className="bg-black/70 text-white p-2 rounded-full hover:bg-main/20"
                     >
                       {isAutoPlay ? <Pause size={16} /> : <Play size={16} />}
                     </button>
-                    {/* Zoom */}
                     <button
                       onClick={toggleZoom}
-                      className="bg-black/80 backdrop-blur-sm text-white p-2 rounded-full border border-main/30 hover:bg-main/20 transition-all duration-300"
+                      className="bg-black/70 text-white p-2 rounded-full hover:bg-main/20"
                     >
                       <ZoomIn size={16} />
                     </button>
                   </div>
+                </div>
 
-                  {/* Image Counter */}
-                  <div className="absolute bottom-4 left-4">
-                    <span className="bg-black/80 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-medium">
-                      {currentImageIndex + 1} / {selectedProject.images.length}
-                    </span>
+                {/* Navigation */}
+                <button
+                  onClick={prevImage}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/70 text-white p-3 rounded-full opacity-0 group-hover:opacity-100 transition"
+                >
+                  <ChevronLeft size={20} />
+                </button>
+                <button
+                  onClick={nextImage}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/70 text-white p-3 rounded-full opacity-0 group-hover:opacity-100 transition"
+                >
+                  <ChevronRight size={20} />
+                </button>
+              </div>
+
+              {/* Thumbnails */}
+              <div className="flex gap-3 overflow-x-auto pb-2">
+                {selectedProject.images.map((img, index) => (
+                  <div
+                    key={index}
+                    onClick={() => selectImage(index)}
+                    className={`min-w-[90px] h-[70px] rounded-lg overflow-hidden cursor-pointer border-2 transition ${
+                      currentImageIndex === index
+                        ? "border-main"
+                        : "border-transparent"
+                    }`}
+                  >
+                    <img
+                      src={img}
+                      alt=""
+                      className="w-full h-full object-cover hover:scale-110 transition"
+                    />
                   </div>
-                </div>
-
-                {/* Thumbnail Grid */}
-                <div className="grid grid-cols-4 gap-3 mt-6">
-                  {selectedProject.images.map((image, index) => (
-                    <div
-                      key={index}
-                      className="relative overflow-hidden rounded-xl aspect-square cursor-pointer group"
-                      onClick={() => selectImage(index)}
-                    >
-                      <img
-                        src={image}
-                        alt={`${selectedProject.title} - Image ${index + 1}`}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                      />
-                      {index === currentImageIndex && (
-                        <div className="absolute inset-0 border-2 border-main shadow-lg shadow-main/30"></div>
-                      )}
-                    </div>
-                  ))}
-                </div>
+                ))}
               </div>
             </div>
           </div>
@@ -274,39 +208,18 @@ const ProjectModal = memo(({ isOpen, selectedProject, onClose }) => {
 
       {/* Zoom Overlay */}
       {isZoomed && (
-        <div className="fixed inset-0 bg-black/95 backdrop-blur-xl z-[60] flex items-center justify-center p-4">
-          <div className="relative w-full h-full flex items-center justify-center">
-            <img
-              src={selectedProject.images[currentImageIndex]}
-              alt={`${selectedProject.title} - Zoomed`}
-              className="max-w-full max-h-full object-contain drop-shadow-lg"
-            />
-
-            <button
-              onClick={toggleZoom}
-              className="absolute top-4 right-4 bg-black/80 backdrop-blur-sm text-white p-3 rounded-full border border-main/30 hover:bg-main/20 transition-all duration-300"
-            >
-              <X size={24} />
-            </button>
-
-            {selectedProject.images.length > 1 && (
-              <>
-                <button
-                  onClick={prevImage}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/80 backdrop-blur-sm text-white p-3 rounded-full border border-main/30 hover:bg-main/20 transition-all duration-300"
-                >
-                  <ChevronLeft size={24} />
-                </button>
-
-                <button
-                  onClick={nextImage}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/80 backdrop-blur-sm text-white p-3 rounded-full border border-main/30 hover:bg-main/20 transition-all duration-300"
-                >
-                  <ChevronRight size={24} />
-                </button>
-              </>
-            )}
-          </div>
+        <div className="fixed inset-0 bg-black/95 z-[60] flex items-center justify-center">
+          <img
+            src={selectedProject.images[currentImageIndex]}
+            alt={`${selectedProject.title} Zoomed`}
+            className="max-w-[95%] max-h-[90%] object-contain"
+          />
+          <button
+            onClick={toggleZoom}
+            className="absolute top-6 right-6 bg-black/70 text-white p-3 rounded-full"
+          >
+            <X size={24} />
+          </button>
         </div>
       )}
     </>
@@ -314,5 +227,4 @@ const ProjectModal = memo(({ isOpen, selectedProject, onClose }) => {
 });
 
 ProjectModal.displayName = "ProjectModal";
-
 export default ProjectModal;

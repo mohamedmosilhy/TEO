@@ -34,8 +34,8 @@ export default function Navbar() {
   const links = [
     createLink("HOME", "/TEO/"),
     createLink("TEO SPECIALTIES", "/teo-specialties/"),
-    createLink("PROJECTS", "/projects/"),
-    createLink("TEO STORY", "/TEO/#our-story"),
+    createLink("TEO PROJECTS", "/projects/"),
+    createLink("TEO STORY", "/story/"),
     createLink("CONTACT", "/TEO/#contact"),
   ];
 

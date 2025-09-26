@@ -18,6 +18,7 @@ import Contact from "./components/Contact";
 // Lazy load pages for better performance
 const ProjectsPage = lazy(() => import("./pages/ProjectsPage"));
 const TEOSpecialtiesPage = lazy(() => import("./pages/TEOSpecialtiesPage"));
+const TeoStoryPage = lazy(() => import("./pages/TeoStoryPage"));
 
 // Import loading component
 import { PageLoading } from "./components/Loading";
@@ -36,9 +37,8 @@ const HomePage = () => (
   <>
     <Hero />
     <Services />
-    <Stats />
+    {/* <Stats /> */}
     <Testimonials />
-    <Story />
     <Contact />
   </>
 );
@@ -64,6 +64,14 @@ function App() {
               element={
                 <Suspense fallback={<PageLoading />}>
                   <TEOSpecialtiesPage />
+                </Suspense>
+              }
+            />
+            <Route
+              path="story"
+              element={
+                <Suspense fallback={<PageLoading />}>
+                  <TeoStoryPage />
                 </Suspense>
               }
             />
