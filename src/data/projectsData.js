@@ -1,19 +1,17 @@
-import project5_1 from "../assets/images/projects/residential/design/apartment-el-sheikh-zayed/1.jpeg";
-import project5_2 from "../assets/images/projects/residential/design/apartment-el-sheikh-zayed/2.jpg";
-import project5_3 from "../assets/images/projects/residential/design/apartment-el-sheikh-zayed/3.jpg";
-import project5_4 from "../assets/images/projects/residential/design/apartment-el-sheikh-zayed/4.jpg";
-
 import project2_1 from "../assets/images/projects/residential/design/i-villa-abha-compound/1.jpeg";
 import project2_2 from "../assets/images/projects/residential/design/i-villa-abha-compound/2.jpeg";
 import project2_3 from "../assets/images/projects/residential/design/i-villa-abha-compound/3.jpeg";
 import project2_4 from "../assets/images/projects/residential/design/i-villa-abha-compound/4.jpeg";
-import project2_5 from "../assets/images/projects/residential/design/i-villa-abha-compound/5.jpg";
+import project2_5 from "../assets/images/projects/residential/design/i-villa-abha-compound/5.jpeg";
 import project2_6 from "../assets/images/projects/residential/design/i-villa-abha-compound/6.jpg";
 import project2_7 from "../assets/images/projects/residential/design/i-villa-abha-compound/7.jpg";
 import project2_8 from "../assets/images/projects/residential/design/i-villa-abha-compound/8.jpg";
 import project2_9 from "../assets/images/projects/residential/design/i-villa-abha-compound/9.jpg";
 import project2_10 from "../assets/images/projects/residential/design/i-villa-abha-compound/10.jpg";
 import project2_11 from "../assets/images/projects/residential/design/i-villa-abha-compound/11.jpg";
+import project2_12 from "../assets/images/projects/residential/design/i-villa-abha-compound/12.jpg";
+import project2_13 from "../assets/images/projects/residential/design/i-villa-abha-compound/13.jpg";
+import project2_14 from "../assets/images/projects/residential/design/i-villa-abha-compound/14.jpg";
 
 import project4_1 from "../assets/images/projects/residential/design/paint-house-mountain-view/Girl Room 1.jpg";
 import project4_2 from "../assets/images/projects/residential/design/paint-house-mountain-view/Girl Room 2.jpg";
@@ -155,6 +153,9 @@ export const projects = [
       project2_9,
       project2_10,
       project2_11,
+      project2_12,
+      project2_13,
+      project2_14,
     ],
   },
 
@@ -224,14 +225,6 @@ export const projects = [
   },
   {
     id: 5,
-    img: project5_1,
-    title: "APARTMENT El SHEIKH ZAYED",
-    category: "Residential",
-    type: "Design",
-    images: [project5_1, project5_2, project5_3, project5_4],
-  },
-  {
-    id: 6,
     img: project6_1,
     title: "PROJECT 1",
     category: "Landscaping",
@@ -250,7 +243,7 @@ export const projects = [
     ],
   },
   {
-    id: 7,
+    id: 6,
     img: project7_1,
     title: "PROJECT 2",
     category: "Landscaping",
@@ -258,7 +251,7 @@ export const projects = [
     images: [project7_1, project7_2],
   },
   {
-    id: 8,
+    id: 7,
     img: project8_1,
     title: "PROJECT 3",
     category: "Landscaping",
