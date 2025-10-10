@@ -1,139 +1,113 @@
-// src/data/projectsData.js
-
-// Helper: sort image keys before mapping
-function sortAndMap(images) {
-  return Object.keys(images)
+// ✅ Helper: sort and map media files
+function sortAndMap(files) {
+  return Object.keys(files)
     .sort((a, b) => {
-      const numA = parseInt(a.match(/(\d+)/)?.[0] || 0, 10);
-      const numB = parseInt(b.match(/(\d+)/)?.[0] || 0, 10);
+      const numA = parseInt(a.match(/\d+/)?.[0] || 0, 10);
+      const numB = parseInt(b.match(/\d+/)?.[0] || 0, 10);
       return numA - numB || a.localeCompare(b);
     })
-    .map((key) => images[key].default);
+    .map((key) => files[key].default);
 }
 
-// Auto-load + sort all project images
-const project1Images = sortAndMap(
-  import.meta.glob(
-    "../assets/images/projects/residential/design/town-house-karma-gates/*.{jpg,jpeg,png}",
+// ✅ Define all static imports (images + videos)
+const mediaImports = {
+  karma: import.meta.glob(
+    "../assets/images/projects/residential/design/town-house-karma-gates/*.{jpg,jpeg,png,mp4,webm,ogg}",
     { eager: true }
-  )
-);
-
-const project2Images = sortAndMap(
-  import.meta.glob(
-    "../assets/images/projects/residential/design/i-villa-abha-compound/*.{jpg,jpeg,png}",
+  ),
+  abha: import.meta.glob(
+    "../assets/images/projects/residential/design/i-villa-abha-compound/*.{jpg,jpeg,png,mp4,webm,ogg}",
     { eager: true }
-  )
-);
-
-const project4Images = sortAndMap(
-  import.meta.glob(
-    "../assets/images/projects/residential/design/paint-house-el-patio-oro/*.{jpg,jpeg,png}",
+  ),
+  patioOro: import.meta.glob(
+    "../assets/images/projects/residential/design/paint-house-el-patio-oro/*.{jpg,jpeg,png,mp4,webm,ogg}",
     { eager: true }
-  )
-);
-
-const project6Images = sortAndMap(
-  import.meta.glob(
-    "../assets/images/projects/landscaping/design/PROJECT1/*.{jpg,jpeg,png}",
+  ),
+  golfExtension: import.meta.glob(
+    "../assets/images/projects/landscaping/design/PROJECT1/*.{jpg,jpeg,png,mp4,webm,ogg}",
     { eager: true }
-  )
-);
-
-const project7Images = sortAndMap(
-  import.meta.glob(
-    "../assets/images/projects/landscaping/design/PROJECT2/*.{jpg,jpeg,png}",
+  ),
+  palmValley: import.meta.glob(
+    "../assets/images/projects/landscaping/design/Villa palm valley/*.{jpg,jpeg,png,mp4,webm,ogg}",
     { eager: true }
-  )
-);
-
-const project8Images = sortAndMap(
-  import.meta.glob(
-    "../assets/images/projects/landscaping/design/PROJECT3/*.{jpg,jpeg,png}",
+  ),
+  project2: import.meta.glob(
+    "../assets/images/projects/landscaping/design/PROJECT2/*.{jpg,jpeg,png,mp4,webm,ogg}",
     { eager: true }
-  )
-);
-
-const project9Images = sortAndMap(
-  import.meta.glob(
-    "../assets/images/projects/landscaping/design/Villa palm valley/*.{jpg,jpeg,png}",
+  ),
+  project3: import.meta.glob(
+    "../assets/images/projects/landscaping/design/PROJECT3/*.{jpg,jpeg,png,mp4,webm,ogg}",
     { eager: true }
-  )
-);
-
-const project10Images = sortAndMap(
-  import.meta.glob(
-    "../assets/images/projects/residential/design/Villa in PATIO EL ZAHRAA/*.{jpg,jpeg,png}",
+  ),
+  patioZahraa: import.meta.glob(
+    "../assets/images/projects/residential/design/Villa in PATIO EL ZAHRAA/*.{jpg,jpeg,png,mp4,webm,ogg}",
     { eager: true }
-  )
-);
+  ),
+  duplexElSheikhZayed: import.meta.glob(
+    "../assets/images/projects/residential/real/DUPLEX - EL SHEIKH ZAYED/*.{jpg,jpeg,png,mp4,webm,ogg}",
+    { eager: true }
+  ),
+};
 
+// ✅ Build projects with static imports
 export const projects = [
   {
     id: 1,
-    img: project1Images[0],
     title: "TOWN HOUSE KARMA GATES",
     category: "Residential",
     type: "Design",
-    images: project1Images,
+    media: sortAndMap(mediaImports.karma),
   },
   {
     id: 2,
-    img: project2Images[0],
     title: "I VILLA - ABHA COMPOUND",
     category: "Residential",
     type: "Design",
-    images: project2Images,
+    media: sortAndMap(mediaImports.abha),
   },
   {
     id: 3,
-    img: project4Images[0],
-    title: "PAINT HOUSE - El-Patio Oro",
+    title: "PENTHOUSE - EL PATIO ORO",
     category: "Residential",
     type: "Design",
-    images: project4Images,
+    media: sortAndMap(mediaImports.patioOro),
   },
   {
     id: 4,
-    img: project6Images[0],
-    title: "PROJECT 1",
+    title: "VILLA - GOLF EXTENSION",
     category: "Landscaping",
     type: "Design",
-    images: project6Images,
+    media: sortAndMap(mediaImports.golfExtension),
   },
   {
     id: 5,
-    img: project7Images[0],
-    title: "PROJECT 2",
+    title: "VILLA - PALM VALLEY",
     category: "Landscaping",
     type: "Design",
-    images: project7Images,
+    media: [
+      ...sortAndMap(mediaImports.palmValley),
+      ...sortAndMap(mediaImports.project2),
+      ...sortAndMap(mediaImports.project3),
+    ],
   },
   {
     id: 6,
-    img: project8Images[0],
-    title: "PROJECT 3",
-    category: "Landscaping",
+    title: "VILLA in PATIO EL ZAHRAA",
+    category: "Residential",
     type: "Design",
-    images: project8Images,
+    media: sortAndMap(mediaImports.patioZahraa),
   },
   {
     id: 7,
-    img: project9Images[0],
-    title: "Villa palm valley",
-    category: "Landscaping",
-    type: "Design",
-    images: project9Images,
-  },
-  {
-    id: 8,
-    img: project10Images[0],
-    title: "Villa in PATIO EL ZAHRAA",
+    title: "DUPLEX - EL SHEIKH ZAYED",
     category: "Residential",
-    type: "Design",
-    images: project10Images,
+    type: "Real",
+    media: sortAndMap(mediaImports.duplexElSheikhZayed),
   },
-];
+].map((p) => ({
+  ...p,
+  img: p.media[0], // first image/video as cover
+}));
 
 export const categories = ["All", "Residential", "Commercial", "Landscaping"];
 export const types = ["All", "Design", "Real"];
