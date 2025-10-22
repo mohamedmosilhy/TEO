@@ -1,5 +1,10 @@
 import React from "react";
-import { SiInstagram, SiFacebook, SiLinkedin } from "react-icons/si";
+import {
+  SiInstagram,
+  SiFacebook,
+  SiLinkedin,
+  SiWhatsapp,
+} from "react-icons/si";
 import { ArrowUp } from "lucide-react";
 import logo from "../assets/images/logo.jpg";
 
@@ -80,7 +85,7 @@ const Footer = () => {
                 />
               </a>
               <a
-                href="https://www.facebook.com"
+                href="/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group flex items-center justify-center w-11 h-11 border border-main hover:bg-main transition-all duration-300 hover:scale-110"
@@ -91,12 +96,23 @@ const Footer = () => {
                 />
               </a>
               <a
-                href="https://www.linkedin.com"
+                href="/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group flex items-center justify-center w-11 h-11 border border-main hover:bg-main transition-all duration-300 hover:scale-110"
               >
                 <SiLinkedin
+                  className="text-main group-hover:text-black transition-colors duration-300"
+                  size={18}
+                />
+              </a>
+              <a
+                href="https://wa.me/201005246243"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center justify-center w-11 h-11 border border-main hover:bg-main transition-all duration-300 hover:scale-110"
+              >
+                <SiWhatsapp
                   className="text-main group-hover:text-black transition-colors duration-300"
                   size={18}
                 />

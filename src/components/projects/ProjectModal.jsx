@@ -8,6 +8,7 @@ import {
   ZoomIn,
 } from "lucide-react";
 import gsap from "gsap";
+import music from "../../assets/music.mp3";
 
 const ProjectModal = memo(({ isOpen, selectedProject, onClose }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -17,6 +18,25 @@ const ProjectModal = memo(({ isOpen, selectedProject, onClose }) => {
 
   const modalRef = useRef(null);
   const autoPlayRef = useRef(null);
+
+  const audioRef = useRef(null); // 👈 added
+
+  // 👇 music control
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    if (isOpen) {
+      audio.currentTime = 0;
+      audio.play().catch(() => {});
+    } else {
+      audio.pause();
+    }
+
+    return () => {
+      audio.pause();
+    };
+  }, [isOpen]);
 
   // Detect media type (image or video)
   const getMediaType = (url) => {
@@ -113,6 +133,7 @@ const ProjectModal = memo(({ isOpen, selectedProject, onClose }) => {
 
   return (
     <>
+      <audio src={music} ref={audioRef} loop />
       {/* Main Modal */}
       <div className="fixed inset-0 bg-black/90 backdrop-blur-lg z-50 flex items-center justify-center p-4">
         <div

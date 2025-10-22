@@ -9,6 +9,22 @@ function sortAndMap(files) {
     .map((key) => files[key].default);
 }
 
+// ✅ Helper: find and exclude cover image
+function extractCover(files) {
+  let cover = null;
+  const filteredFiles = {};
+
+  for (const [key, value] of Object.entries(files)) {
+    if (/cover\.(jpg|jpeg|png|webp)$/i.test(key)) {
+      cover = value.default;
+    } else {
+      filteredFiles[key] = value;
+    }
+  }
+
+  return { cover, filteredFiles };
+}
+
 // ✅ Define all static imports (images + videos)
 const mediaImports = {
   karma: import.meta.glob(
@@ -44,7 +60,15 @@ const mediaImports = {
     { eager: true }
   ),
   duplexElSheikhZayed: import.meta.glob(
-    "../assets/images/projects/residential/real/DUPLEX - EL SHEIKH ZAYED/*.{jpg,jpeg,png,mp4,webm,ogg}",
+    "../assets/images/projects/residential/real/DUPLEX - COMPOUND ABHA/*.{jpg,jpeg,png,mp4,webm,ogg}",
+    { eager: true }
+  ),
+  penthouseAbha: import.meta.glob(
+    "../assets/images/projects/residential/real/PENTHOUSE -ABHA/*.{jpg,jpeg,png,mp4,webm,ogg}",
+    { eager: true }
+  ),
+  penthouseVillaria: import.meta.glob(
+    "../assets/images/projects/residential/real/PENTHOUSE - COMPOUND VILLARIA/*.{jpg,jpeg,png,mp4,webm,ogg}",
     { eager: true }
   ),
 };
@@ -97,17 +121,51 @@ export const projects = [
     type: "Design",
     media: sortAndMap(mediaImports.patioZahraa),
   },
-  {
-    id: 7,
-    title: "DUPLEX - EL SHEIKH ZAYED",
-    category: "Residential",
-    type: "Real",
-    media: sortAndMap(mediaImports.duplexElSheikhZayed),
-  },
+  // ✅ Special handling for DUPLEX
+  (() => {
+    const { cover, filteredFiles } = extractCover(
+      mediaImports.duplexElSheikhZayed
+    );
+    return {
+      id: 7,
+      title: "DUPLEX - COMPOUND ABHA",
+      category: "Residential",
+      type: "Real",
+      cover,
+      media: sortAndMap(filteredFiles),
+    };
+  })(),
+  // ✅ Special handling for DUPLEX
+  (() => {
+    const { cover, filteredFiles } = extractCover(mediaImports.penthouseAbha);
+    return {
+      id: 8,
+      title: "PENTHOUSE - COMPOUND ABHA",
+      category: "Residential",
+      type: "Real",
+      cover,
+      media: sortAndMap(filteredFiles),
+    };
+  })(),
+  // ✅ Special handling for PENTHOUSE
+  (() => {
+    const { cover, filteredFiles } = extractCover(
+      mediaImports.penthouseVillaria
+    );
+    return {
+      id: 9,
+      title: "PENTHOUSE - COMPOUND VILLARIA",
+      category: "Residential",
+      type: "Real",
+      cover,
+      media: sortAndMap(filteredFiles),
+    };
+  })(),
 ].map((p) => ({
   ...p,
-  img: p.media[0], // first image/video as cover
+  img: p.cover || p.media[0], // ✅ Prefer cover if available
 }));
 
+// ✅ Filters
 export const categories = ["All", "Residential", "Commercial", "Landscaping"];
 export const types = ["All", "Design", "Real"];
