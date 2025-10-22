@@ -1,6 +1,10 @@
 import { memo } from "react";
 import { Grid3X3, List } from "lucide-react";
 
+/**
+ * ProjectFilters component for filtering and viewing projects
+ * Provides category/type filters and view mode toggles
+ */
 const ProjectFilters = memo(
   ({
     activeFilter,
@@ -16,8 +20,8 @@ const ProjectFilters = memo(
   }) => {
     return (
       <div className="mb-12">
+        {/* View Mode Toggle */}
         <div className="flex flex-col lg:flex-row justify-between items-center gap-6 mb-8">
-          {/* View Mode Toggle */}
           <div className="flex items-center gap-2">
             <button
               onClick={() => setViewMode("grid")}
@@ -26,6 +30,7 @@ const ProjectFilters = memo(
                   ? "bg-main text-black"
                   : "bg-gray-800 text-gray-400"
               }`}
+              title="Grid View"
             >
               <Grid3X3 size={20} />
             </button>
@@ -36,6 +41,7 @@ const ProjectFilters = memo(
                   ? "bg-main text-black"
                   : "bg-gray-800 text-gray-400"
               }`}
+              title="List View"
             >
               <List size={20} />
             </button>

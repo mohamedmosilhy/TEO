@@ -11,39 +11,92 @@ import gsap from "gsap";
 import music from "../../assets/music.mp3";
 
 const ProjectModal = memo(({ isOpen, selectedProject, onClose }) => {
+  // State management
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isAutoPlay, setIsAutoPlay] = useState(false);
+  const [isAutoPlay, setIsAutoPlay] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [isZoomed, setIsZoomed] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [videoProgress, setVideoProgress] = useState(0);
+  const [videoDuration, setVideoDuration] = useState(0);
+  const [isVideoLoading, setIsVideoLoading] = useState(false);
 
+  // Refs
   const modalRef = useRef(null);
   const autoPlayRef = useRef(null);
+  const videoRef = useRef(null);
+  const audioRef = useRef(null);
+  const isTabVisible = useRef(true);
+  const transitionTimeoutRef = useRef(null);
 
-  const audioRef = useRef(null); // 👈 added
+  // ==================== UTILITY FUNCTIONS ====================
 
-  // 👇 music control
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-
-    if (isOpen) {
-      audio.currentTime = 0;
-      audio.play().catch(() => {});
-    } else {
-      audio.pause();
-    }
-
-    return () => {
-      audio.pause();
-    };
-  }, [isOpen]);
-
-  // Detect media type (image or video)
+  /**
+   * Detects if a media file is a video or image based on file extension
+   */
   const getMediaType = (url) => {
     const ext = url.split(".").pop().toLowerCase();
     return ["mp4", "webm", "ogg"].includes(ext) ? "video" : "image";
   };
 
+  /**
+   * Ensures background audio continues playing when switching media
+   */
+  const ensureAudioContinues = useCallback(() => {
+    const audio = audioRef.current;
+    if (audio && isPlaying && audio.paused && isTabVisible.current && isOpen) {
+      audio.play().catch(() => {});
+    }
+  }, [isPlaying, isOpen]);
+
+  // ==================== AUDIO MANAGEMENT ====================
+
+  /**
+   * Handles background music with tab visibility detection
+   */
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const handleVisibilityChange = () => {
+      isTabVisible.current = !document.hidden;
+      if (audio) {
+        if (isTabVisible.current && isOpen && isPlaying) {
+          audio.play().catch(() => {});
+        } else {
+          audio.pause();
+        }
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    if (isOpen) {
+      // Only reset audio if it's not already playing
+      if (audio.paused) {
+        audio.currentTime = 0;
+        audio.volume = 0.3;
+        if (isTabVisible.current) {
+          audio.play().catch(() => {});
+          setIsPlaying(true);
+        }
+      }
+    } else {
+      audio.pause();
+      setIsPlaying(false);
+    }
+
+    return () => {
+      audio.pause();
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [isOpen, isPlaying]);
+
+  // ==================== NAVIGATION FUNCTIONS ====================
+
+  /**
+   * Navigate to next media item
+   */
   const nextItem = useCallback(() => {
     if (selectedProject) {
       setIsLoading(true);
@@ -54,6 +107,9 @@ const ProjectModal = memo(({ isOpen, selectedProject, onClose }) => {
     }
   }, [selectedProject]);
 
+  /**
+   * Navigate to previous media item
+   */
   const prevItem = useCallback(() => {
     if (selectedProject) {
       setIsLoading(true);
@@ -64,28 +120,153 @@ const ProjectModal = memo(({ isOpen, selectedProject, onClose }) => {
     }
   }, [selectedProject]);
 
+  /**
+   * Jump to specific media item by index
+   */
   const selectItem = (index) => {
     setIsLoading(true);
     setCurrentIndex(index);
     setTimeout(() => setIsLoading(false), 300);
   };
 
+  /**
+   * Toggle zoom mode for images
+   */
   const toggleZoom = () => setIsZoomed((prev) => !prev);
+
+  /**
+   * Toggle auto-play mode
+   */
   const toggleAutoPlay = () => setIsAutoPlay((prev) => !prev);
 
+  // ==================== AUTO-PLAY LOGIC ====================
+
+  /**
+   * Handles auto-play for both images and videos
+   */
   useEffect(() => {
-    if (isAutoPlay && selectedProject?.media?.length > 1) {
-      const currentType = getMediaType(selectedProject.media[currentIndex]);
-      if (currentType === "image") {
-        autoPlayRef.current = setInterval(nextItem, 3000);
-      }
-    } else {
+    if (!isAutoPlay || !selectedProject?.media?.length) return;
+
+    const currentType = getMediaType(selectedProject.media[currentIndex]);
+
+    if (currentType === "image") {
+      // Auto-advance images every 3 seconds
+      autoPlayRef.current = setInterval(nextItem, 3000);
+    } else if (currentType === "video") {
+      // For videos, we'll handle auto-advance in the video event handlers
       clearInterval(autoPlayRef.current);
+      // Auto-play the video when it loads
+      if (videoRef.current) {
+        videoRef.current.play().catch(() => {});
+      }
     }
+
     return () => clearInterval(autoPlayRef.current);
   }, [isAutoPlay, nextItem, selectedProject, currentIndex]);
 
+  /**
+   * Handle video auto-play when current media changes
+   */
+  useEffect(() => {
+    if (selectedProject?.media?.length && isAutoPlay) {
+      const currentType = getMediaType(selectedProject.media[currentIndex]);
+      if (currentType === "video" && videoRef.current) {
+        // Small delay to ensure video element is ready
+        setTimeout(() => {
+          if (videoRef.current) {
+            videoRef.current.play().catch(() => {});
+          }
+        }, 100);
+      }
+    }
+  }, [currentIndex, selectedProject, isAutoPlay]);
+
+  /**
+   * Maintain audio continuity when switching media
+   */
+  useEffect(() => {
+    if (!isOpen) return;
+    ensureAudioContinues();
+  }, [currentIndex, isOpen, ensureAudioContinues]);
+
+  // ==================== VIDEO EVENT HANDLERS ====================
+
+  /**
+   * Handle video end event with smooth transition
+   */
+  const handleVideoEnd = useCallback(() => {
+    if (isAutoPlay && selectedProject?.media?.length > 1) {
+      setIsVideoLoading(true);
+      transitionTimeoutRef.current = setTimeout(() => {
+        nextItem();
+        setIsVideoLoading(false);
+      }, 800);
+    }
+  }, [isAutoPlay, nextItem, selectedProject]);
+
+  /**
+   * Handle video load event
+   */
+  const handleVideoLoad = useCallback(() => {
+    if (videoRef.current && isAutoPlay) {
+      videoRef.current.play().catch(() => {});
+    }
+    ensureAudioContinues();
+  }, [isAutoPlay, ensureAudioContinues]);
+
+  /**
+   * Update video progress bar
+   */
+  const handleVideoTimeUpdate = useCallback(() => {
+    if (videoRef.current) {
+      const progress =
+        (videoRef.current.currentTime / videoRef.current.duration) * 100;
+      setVideoProgress(progress || 0);
+    }
+  }, []);
+
+  /**
+   * Handle video metadata loaded
+   */
+  const handleVideoLoadedMetadata = useCallback(() => {
+    if (videoRef.current) {
+      setVideoDuration(videoRef.current.duration);
+      setIsVideoLoading(false);
+    }
+  }, []);
+
+  /**
+   * Handle video load start
+   */
+  const handleVideoLoadStart = useCallback(() => {
+    setIsVideoLoading(true);
+  }, []);
+
+  /**
+   * Handle video can play
+   */
+  const handleVideoCanPlay = useCallback(() => {
+    setIsVideoLoading(false);
+  }, []);
+
+  // ==================== MODAL MANAGEMENT ====================
+
+  /**
+   * Close modal with cleanup and animation
+   */
   const closeModal = useCallback(() => {
+    // Stop audio and clear intervals
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
+    clearInterval(autoPlayRef.current);
+    clearTimeout(transitionTimeoutRef.current);
+    setIsPlaying(false);
+    setIsVideoLoading(false);
+    setVideoProgress(0);
+    setVideoDuration(0);
+
     if (modalRef.current) {
       gsap.to(modalRef.current, {
         opacity: 0,
@@ -96,7 +277,7 @@ const ProjectModal = memo(({ isOpen, selectedProject, onClose }) => {
         onComplete: () => {
           onClose();
           setCurrentIndex(0);
-          setIsAutoPlay(false);
+          setIsAutoPlay(true);
           setIsZoomed(false);
           document.body.style.overflow = "unset";
         },
@@ -104,6 +285,11 @@ const ProjectModal = memo(({ isOpen, selectedProject, onClose }) => {
     }
   }, [onClose]);
 
+  // ==================== MODAL EFFECTS ====================
+
+  /**
+   * Animate modal entrance
+   */
   useEffect(() => {
     if (isOpen && modalRef.current) {
       gsap.fromTo(
@@ -114,10 +300,13 @@ const ProjectModal = memo(({ isOpen, selectedProject, onClose }) => {
     }
   }, [isOpen]);
 
+  /**
+   * Initialize modal state when opened
+   */
   useEffect(() => {
     if (isOpen) {
       setCurrentIndex(0);
-      setIsAutoPlay(false);
+      setIsAutoPlay(true);
       setIsZoomed(false);
       document.body.style.overflow = "hidden";
     }
@@ -175,54 +364,113 @@ const ProjectModal = memo(({ isOpen, selectedProject, onClose }) => {
                     }`}
                   />
                 ) : (
-                  <video
-                    src={currentMedia}
-                    controls
-                    autoPlay
-                    muted
-                    className="w-full max-h-[70vh] object-contain bg-black"
-                  />
+                  <div className="relative">
+                    <video
+                      ref={videoRef}
+                      src={currentMedia}
+                      controls
+                      autoPlay
+                      muted
+                      loop={false}
+                      onEnded={handleVideoEnd}
+                      onLoadedData={handleVideoLoad}
+                      onTimeUpdate={handleVideoTimeUpdate}
+                      onLoadedMetadata={handleVideoLoadedMetadata}
+                      onLoadStart={handleVideoLoadStart}
+                      onCanPlay={handleVideoCanPlay}
+                      onPlay={() => {
+                        setIsPlaying(true);
+                        // Ensure background audio continues
+                        ensureAudioContinues();
+                      }}
+                      onPause={() => {
+                        // Don't pause background audio when video pauses
+                        // setIsPlaying(false);
+                      }}
+                      className={`w-full max-h-[70vh] object-contain bg-black transition-all duration-500 ${
+                        isVideoLoading
+                          ? "opacity-70 scale-105"
+                          : "opacity-100 scale-100"
+                      }`}
+                    />
+
+                    {/* Video Loading Overlay */}
+                    {isVideoLoading && (
+                      <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-10">
+                        <div className="flex flex-col items-center gap-3">
+                          <div className="w-8 h-8 border-2 border-main/30 border-t-main rounded-full animate-spin"></div>
+                          <span className="text-white text-sm">
+                            Loading video...
+                          </span>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Custom Video Progress Bar */}
+                    {videoDuration > 0 && (
+                      <div className="absolute bottom-0 left-0 right-0 h-1 bg-black/30">
+                        <div
+                          className="h-full bg-main transition-all duration-300"
+                          style={{ width: `${videoProgress}%` }}
+                        />
+                      </div>
+                    )}
+                  </div>
                 )}
 
-                {/* Overlay Controls */}
-                <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/70 via-black/30 to-transparent flex justify-between items-center">
-                  <span className="text-white text-sm px-3 py-1 bg-black/60 rounded-full">
-                    {currentIndex + 1} / {selectedProject.media.length}
-                  </span>
-                  {currentType === "image" && (
-                    <div className="flex gap-2">
-                      <button
-                        onClick={toggleAutoPlay}
-                        className="bg-black/70 text-white p-2 rounded-full hover:bg-main/20"
-                      >
-                        {isAutoPlay ? <Pause size={16} /> : <Play size={16} />}
-                      </button>
+                {/* Enhanced Overlay Controls */}
+                <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex justify-between items-center">
+                  <div className="flex items-center gap-3">
+                    <span className="text-white text-sm px-3 py-1 bg-black/60 rounded-full">
+                      {currentIndex + 1} / {selectedProject.media.length}
+                    </span>
+                    {currentType === "video" && videoDuration > 0 && (
+                      <span className="text-white text-xs px-2 py-1 bg-black/40 rounded">
+                        {Math.floor(videoRef.current?.currentTime || 0)}s /{" "}
+                        {Math.floor(videoDuration)}s
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={toggleAutoPlay}
+                      className={`bg-black/70 text-white p-2 rounded-full hover:bg-main/20 transition-all duration-200 ${
+                        isAutoPlay ? "bg-main/30" : ""
+                      }`}
+                      title={isAutoPlay ? "Pause Auto-play" : "Start Auto-play"}
+                    >
+                      {isAutoPlay ? <Pause size={16} /> : <Play size={16} />}
+                    </button>
+                    {currentType === "image" && (
                       <button
                         onClick={toggleZoom}
-                        className="bg-black/70 text-white p-2 rounded-full hover:bg-main/20"
+                        className="bg-black/70 text-white p-2 rounded-full hover:bg-main/20 transition-all duration-200"
+                        title="Zoom Image"
                       >
                         <ZoomIn size={16} />
                       </button>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
 
-                {/* Navigation */}
+                {/* Enhanced Navigation */}
                 <button
                   onClick={prevItem}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/70 text-white p-3 rounded-full opacity-0 group-hover:opacity-100 transition"
+                  className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/70 text-white p-3 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-main/30 hover:scale-110"
+                  title="Previous"
                 >
                   <ChevronLeft size={20} />
                 </button>
                 <button
                   onClick={nextItem}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/70 text-white p-3 rounded-full opacity-0 group-hover:opacity-100 transition"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/70 text-white p-3 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-main/30 hover:scale-110"
+                  title="Next"
                 >
                   <ChevronRight size={20} />
                 </button>
               </div>
 
-              {/* Thumbnails */}
+              {/* Enhanced Thumbnails */}
               <div className="flex gap-3 overflow-x-auto pb-2">
                 {selectedProject.media.map((item, index) => {
                   const type = getMediaType(item);
@@ -230,25 +478,55 @@ const ProjectModal = memo(({ isOpen, selectedProject, onClose }) => {
                     <div
                       key={index}
                       onClick={() => selectItem(index)}
-                      className={`min-w-[90px] h-[70px] overflow-hidden cursor-pointer border-2 transition ${
+                      className={`min-w-[90px] h-[70px] overflow-hidden cursor-pointer border-2 transition-all duration-300 hover:scale-105 ${
                         currentIndex === index
-                          ? "border-main"
-                          : "border-transparent"
+                          ? "border-main shadow-lg shadow-main/30"
+                          : "border-transparent hover:border-main/50"
                       }`}
                     >
-                      {type === "image" ? (
-                        <img
-                          src={item}
-                          alt=""
-                          className="w-full h-full object-cover hover:scale-110 transition"
-                        />
-                      ) : (
-                        <video
-                          src={item}
-                          muted
-                          className="w-full h-full object-cover"
-                        />
-                      )}
+                      <div className="relative w-full h-full">
+                        {type === "image" ? (
+                          <img
+                            src={item}
+                            alt=""
+                            className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
+                          />
+                        ) : (
+                          <div className="relative w-full h-full bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
+                            <video
+                              src={item}
+                              muted
+                              className="w-full h-full object-cover"
+                              preload="metadata"
+                              onLoadedData={(e) => {
+                                // Set video to first frame for thumbnail
+                                e.target.currentTime = 1;
+                              }}
+                            />
+                            {/* Video Play Icon Overlay */}
+                            <div className="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/20 transition-colors duration-200">
+                              <div className="w-8 h-8 bg-white/90 rounded-full flex items-center justify-center shadow-lg">
+                                <Play
+                                  size={14}
+                                  className="text-gray-800 ml-0.5"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                        {/* Media Type Indicator */}
+                        <div className="absolute top-1 right-1">
+                          {type === "video" ? (
+                            <div className="w-5 h-5 bg-black/60 rounded-full flex items-center justify-center">
+                              <Play size={8} className="text-white" />
+                            </div>
+                          ) : (
+                            <div className="w-5 h-5 bg-black/60 rounded-full flex items-center justify-center">
+                              <div className="w-2 h-2 bg-white rounded-sm" />
+                            </div>
+                          )}
+                        </div>
+                      </div>
                     </div>
                   );
                 })}

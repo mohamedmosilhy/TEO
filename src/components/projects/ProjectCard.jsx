@@ -1,13 +1,18 @@
 import { memo } from "react";
 
+/**
+ * ProjectCard component for displaying project information
+ * Supports both grid and list view modes
+ */
 const ProjectCard = memo(({ project, viewMode, onClick }) => {
+  // Grid view layout
   if (viewMode === "grid") {
     return (
       <div
         className="group cursor-pointer transition-all duration-300 hover:scale-105"
         onClick={() => onClick(project)}
       >
-        <div className="relative overflow-hidden  shadow-2xl">
+        <div className="relative overflow-hidden shadow-2xl">
           <img
             src={project.img}
             alt={project.title}
@@ -31,6 +36,7 @@ const ProjectCard = memo(({ project, viewMode, onClick }) => {
     );
   }
 
+  // List view layout
   return (
     <div
       className="flex gap-6 p-6 bg-gray-900/30 rounded-2xl hover:bg-gray-900/50 transition-all duration-300 cursor-pointer"

@@ -123,23 +123,9 @@ export const projects = [
   },
   // ✅ Special handling for DUPLEX
   (() => {
-    const { cover, filteredFiles } = extractCover(
-      mediaImports.duplexElSheikhZayed
-    );
-    return {
-      id: 7,
-      title: "DUPLEX - COMPOUND ABHA",
-      category: "Residential",
-      type: "Real",
-      cover,
-      media: sortAndMap(filteredFiles),
-    };
-  })(),
-  // ✅ Special handling for DUPLEX
-  (() => {
     const { cover, filteredFiles } = extractCover(mediaImports.penthouseAbha);
     return {
-      id: 8,
+      id: 7,
       title: "PENTHOUSE - COMPOUND ABHA",
       category: "Residential",
       type: "Real",
@@ -153,8 +139,22 @@ export const projects = [
       mediaImports.penthouseVillaria
     );
     return {
-      id: 9,
+      id: 8,
       title: "PENTHOUSE - COMPOUND VILLARIA",
+      category: "Residential",
+      type: "Real",
+      cover,
+      media: sortAndMap(filteredFiles),
+    };
+  })(),
+  // ✅ Special handling for DUPLEX
+  (() => {
+    const { cover, filteredFiles } = extractCover(
+      mediaImports.duplexElSheikhZayed
+    );
+    return {
+      id: 9,
+      title: "DUPLEX - COMPOUND ABHA",
       category: "Residential",
       type: "Real",
       cover,
