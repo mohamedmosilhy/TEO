@@ -66,7 +66,7 @@ const Contact = () => {
       <div className="max-w-5xl mx-auto">
         {/* Heading */}
         <h2 className="text-center text-2xl md:text-3xl text-main tracking-wide mb-12">
-          FEEL FREE TO CONTACT US
+          Get a Consultation
         </h2>
 
         {/* Success Message */}

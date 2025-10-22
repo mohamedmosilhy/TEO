@@ -7,7 +7,7 @@ const ProjectCard = memo(({ project, viewMode, onClick }) => {
         className="group cursor-pointer transition-all duration-300 hover:scale-105"
         onClick={() => onClick(project)}
       >
-        <div className="relative overflow-hidden rounded-2xl shadow-2xl">
+        <div className="relative overflow-hidden  shadow-2xl">
           <img
             src={project.img}
             alt={project.title}

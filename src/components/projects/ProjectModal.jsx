@@ -168,7 +168,7 @@ const ProjectModal = memo(({ isOpen, selectedProject, onClose }) => {
                   <img
                     src={currentMedia}
                     alt={`${selectedProject.title} - ${currentIndex + 1}`}
-                    className={`w-full max-h-[70vh] object-contain rounded-lg transition-all duration-700 ${
+                    className={`w-full max-h-[70vh] object-contain transition-all duration-700 ${
                       isLoading
                         ? "opacity-50 scale-105"
                         : "opacity-100 scale-100"
@@ -180,7 +180,7 @@ const ProjectModal = memo(({ isOpen, selectedProject, onClose }) => {
                     controls
                     autoPlay
                     muted
-                    className="w-full max-h-[70vh] object-contain rounded-lg bg-black"
+                    className="w-full max-h-[70vh] object-contain bg-black"
                   />
                 )}
 
@@ -230,7 +230,7 @@ const ProjectModal = memo(({ isOpen, selectedProject, onClose }) => {
                     <div
                       key={index}
                       onClick={() => selectItem(index)}
-                      className={`min-w-[90px] h-[70px] rounded-lg overflow-hidden cursor-pointer border-2 transition ${
+                      className={`min-w-[90px] h-[70px] overflow-hidden cursor-pointer border-2 transition ${
                         currentIndex === index
                           ? "border-main"
                           : "border-transparent"
