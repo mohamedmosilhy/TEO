@@ -65,7 +65,7 @@ const Contact = () => {
     <section id="contact" className="bg-black text-white py-20 px-6 md:px-20">
       <div className="max-w-5xl mx-auto">
         {/* Heading */}
-        <h2 className="text-center text-2xl md:text-3xl text-main tracking-wide mb-12">
+        <h2 className="text-center text-2xl md:text-3xl text-main tracking-wide mb-12 uppercase">
           Get a Consultation
         </h2>
 
