@@ -37,8 +37,6 @@ const HomePage = () => (
   <>
     <Hero />
     <Services />
-    {/* <Stats /> */}
-    <Testimonials />
     <Contact />
   </>
 );
@@ -46,7 +44,8 @@ const HomePage = () => (
 function App() {
   return (
     <StrictMode>
-      <BrowserRouter basename="/TEO/">
+      {/* TODO: Add basename for GitHub Pages basename="/TEO" */}
+      <BrowserRouter >
         <Routes>
           {/* Main layout wraps all pages */}
           <Route path="/" element={<MainLayout />}>

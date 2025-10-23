@@ -8,7 +8,6 @@ import {
   ZoomIn,
 } from "lucide-react";
 import gsap from "gsap";
-import music from "../../assets/music.mp3";
 
 const ProjectModal = memo(({ isOpen, selectedProject, onClose }) => {
   // State management
@@ -16,7 +15,6 @@ const ProjectModal = memo(({ isOpen, selectedProject, onClose }) => {
   const [isAutoPlay, setIsAutoPlay] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [isZoomed, setIsZoomed] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
   const [videoProgress, setVideoProgress] = useState(0);
   const [videoDuration, setVideoDuration] = useState(0);
   const [isVideoLoading, setIsVideoLoading] = useState(false);
@@ -25,7 +23,6 @@ const ProjectModal = memo(({ isOpen, selectedProject, onClose }) => {
   const modalRef = useRef(null);
   const autoPlayRef = useRef(null);
   const videoRef = useRef(null);
-  const audioRef = useRef(null);
   const isTabVisible = useRef(true);
   const transitionTimeoutRef = useRef(null);
 
@@ -38,59 +35,6 @@ const ProjectModal = memo(({ isOpen, selectedProject, onClose }) => {
     const ext = url.split(".").pop().toLowerCase();
     return ["mp4", "webm", "ogg"].includes(ext) ? "video" : "image";
   };
-
-  /**
-   * Ensures background audio continues playing when switching media
-   */
-  const ensureAudioContinues = useCallback(() => {
-    const audio = audioRef.current;
-    if (audio && isPlaying && audio.paused && isTabVisible.current && isOpen) {
-      audio.play().catch(() => {});
-    }
-  }, [isPlaying, isOpen]);
-
-  // ==================== AUDIO MANAGEMENT ====================
-
-  /**
-   * Handles background music with tab visibility detection
-   */
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-
-    const handleVisibilityChange = () => {
-      isTabVisible.current = !document.hidden;
-      if (audio) {
-        if (isTabVisible.current && isOpen && isPlaying) {
-          audio.play().catch(() => {});
-        } else {
-          audio.pause();
-        }
-      }
-    };
-
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-
-    if (isOpen) {
-      // Only reset audio if it's not already playing
-      if (audio.paused) {
-        audio.currentTime = 0;
-        audio.volume = 0.3;
-        if (isTabVisible.current) {
-          audio.play().catch(() => {});
-          setIsPlaying(true);
-        }
-      }
-    } else {
-      audio.pause();
-      setIsPlaying(false);
-    }
-
-    return () => {
-      audio.pause();
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-    };
-  }, [isOpen, isPlaying]);
 
   // ==================== NAVIGATION FUNCTIONS ====================
 
@@ -152,12 +96,9 @@ const ProjectModal = memo(({ isOpen, selectedProject, onClose }) => {
 
     if (currentType === "image") {
       if (isLastItem) {
-        // Last image - stop auto-play and music after delay
+        // Last image - stop auto-play after delay
         autoPlayRef.current = setTimeout(() => {
           setIsAutoPlay(false);
-          if (audioRef.current) {
-            audioRef.current.pause();
-          }
         }, 3000);
       } else {
         // Auto-advance images every 3 seconds
@@ -195,14 +136,6 @@ const ProjectModal = memo(({ isOpen, selectedProject, onClose }) => {
     }
   }, [currentIndex, selectedProject, isAutoPlay]);
 
-  /**
-   * Maintain audio continuity when switching media
-   */
-  useEffect(() => {
-    if (!isOpen) return;
-    ensureAudioContinues();
-  }, [currentIndex, isOpen, ensureAudioContinues]);
-
   // ==================== VIDEO EVENT HANDLERS ====================
 
   /**
@@ -212,11 +145,8 @@ const ProjectModal = memo(({ isOpen, selectedProject, onClose }) => {
     if (isAutoPlay && selectedProject?.media?.length > 1) {
       const isLastItem = currentIndex === selectedProject.media.length - 1;
       if (isLastItem) {
-        // Last video finished - stop auto-play and music
+        // Last video finished - stop auto-play
         setIsAutoPlay(false);
-        if (audioRef.current) {
-          audioRef.current.pause();
-        }
       } else {
         setIsVideoLoading(true);
         transitionTimeoutRef.current = setTimeout(() => {
@@ -225,11 +155,8 @@ const ProjectModal = memo(({ isOpen, selectedProject, onClose }) => {
         }, 800);
       }
     } else if (isAutoPlay && selectedProject?.media?.length === 1) {
-      // Last video finished - stop auto-play and music
+      // Last video finished - stop auto-play
       setIsAutoPlay(false);
-      if (audioRef.current) {
-        audioRef.current.pause();
-      }
     }
   }, [isAutoPlay, nextItem, selectedProject, currentIndex]);
 
@@ -240,8 +167,7 @@ const ProjectModal = memo(({ isOpen, selectedProject, onClose }) => {
     if (videoRef.current && isAutoPlay) {
       videoRef.current.play().catch(() => {});
     }
-    ensureAudioContinues();
-  }, [isAutoPlay, ensureAudioContinues]);
+  }, [isAutoPlay]);
 
   /**
    * Update video progress bar
@@ -284,14 +210,9 @@ const ProjectModal = memo(({ isOpen, selectedProject, onClose }) => {
    * Close modal with cleanup and animation
    */
   const closeModal = useCallback(() => {
-    // Stop audio and clear intervals
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-    }
+    // Clear intervals
     clearInterval(autoPlayRef.current);
     clearTimeout(transitionTimeoutRef.current);
-    setIsPlaying(false);
     setIsVideoLoading(false);
     setVideoProgress(0);
     setVideoDuration(0);
@@ -351,7 +272,6 @@ const ProjectModal = memo(({ isOpen, selectedProject, onClose }) => {
 
   return (
     <>
-      <audio src={music} ref={audioRef} loop />
       {/* Main Modal */}
       <div className="fixed inset-0 bg-black/90 backdrop-blur-lg z-50 flex items-center justify-center p-4">
         <div
@@ -408,13 +328,10 @@ const ProjectModal = memo(({ isOpen, selectedProject, onClose }) => {
                       onLoadStart={handleVideoLoadStart}
                       onCanPlay={handleVideoCanPlay}
                       onPlay={() => {
-                        setIsPlaying(true);
-                        // Ensure background audio continues
-                        ensureAudioContinues();
+                        // Video started playing
                       }}
                       onPause={() => {
-                        // Don't pause background audio when video pauses
-                        // setIsPlaying(false);
+                        // Video paused
                       }}
                       className={`w-full max-h-[70vh] object-contain bg-black transition-all duration-500 ${
                         isVideoLoading

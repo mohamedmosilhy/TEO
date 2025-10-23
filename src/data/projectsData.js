@@ -81,7 +81,7 @@ const mediaImports = {
 export const projects = [
   {
     id: 1,
-    title: "TOWN HOUSE KARMA GATES",
+    title: "TOWN HOUSE - KARMA GATES COMPOUND",
     category: "Residential",
     type: "Design",
     media: sortAndMap(mediaImports.karma),
@@ -95,21 +95,21 @@ export const projects = [
   },
   {
     id: 3,
-    title: "PENTHOUSE - EL PATIO ORO",
+    title: "PENTHOUSE - ABHA COMPOUND",
     category: "Residential",
     type: "Design",
     media: sortAndMap(mediaImports.patioOro),
   },
   {
     id: 4,
-    title: "VILLA - GOLF EXTENSION",
+    title: "PENTHOUSE- DIAR 2 COMPOUND",
     category: "Landscaping",
     type: "Design",
     media: sortAndMap(mediaImports.golfExtension),
   },
   {
     id: 5,
-    title: "VILLA - PALM VALLEY",
+    title: "VILLA - PALM VALLEY COMPOUND",
     category: "Landscaping",
     type: "Design",
     media: [
@@ -120,7 +120,7 @@ export const projects = [
   },
   {
     id: 6,
-    title: "VILLA in PATIO EL ZAHRAA",
+    title: "VILLA - PATIO EL ZAHRAA COMPOUND",
     category: "Residential",
     type: "Design",
     media: sortAndMap(mediaImports.patioZahraa),
@@ -132,7 +132,7 @@ export const projects = [
     );
     return {
       id: 7,
-      title: "CO-WORKING BUSINESS CENTER - ISTANBUL",
+      title: "BUSINESS CENTER - ISTANBUL",
       category: "Commercial",
       type: "Design",
       cover,
@@ -144,7 +144,7 @@ export const projects = [
     const { cover, filteredFiles } = extractCover(mediaImports.penthouseAbha);
     return {
       id: 8,
-      title: "PENTHOUSE - COMPOUND ABHA",
+      title: "PENTHOUSE - ABHA COMPOUND",
       category: "Residential",
       type: "Real",
       cover,
@@ -158,7 +158,7 @@ export const projects = [
     );
     return {
       id: 9,
-      title: "PENTHOUSE - COMPOUND VILLARIA",
+      title: "PENTHOUSE - VILLARIA COMPOUND",
       category: "Residential",
       type: "Real",
       cover,
@@ -173,7 +173,7 @@ export const projects = [
     );
     return {
       id: 10,
-      title: "DUPLEX - COMPOUND ABHA",
+      title: "DUPLEX - ABHA COMPOUND",
       category: "Residential",
       type: "Real",
       cover,
