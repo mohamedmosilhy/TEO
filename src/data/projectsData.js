@@ -71,6 +71,10 @@ const mediaImports = {
     "../assets/images/projects/residential/real/PENTHOUSE - COMPOUND VILLARIA/*.{jpg,jpeg,png,mp4,webm,ogg}",
     { eager: true }
   ),
+  coWorkingBusinessCenter: import.meta.glob(
+    "../assets/images/projects/commercial/design/CO-WORKING BUSINESS CENTER - ISTANBUL/*.{jpg,jpeg,png,mp4,webm,ogg}",
+    { eager: true }
+  ),
 };
 
 // ✅ Build projects with static imports
@@ -121,11 +125,25 @@ export const projects = [
     type: "Design",
     media: sortAndMap(mediaImports.patioZahraa),
   },
+  // ✅ Special handling for CO-WORKING BUSINESS CENTER
+  (() => {
+    const { cover, filteredFiles } = extractCover(
+      mediaImports.coWorkingBusinessCenter
+    );
+    return {
+      id: 7,
+      title: "CO-WORKING BUSINESS CENTER - ISTANBUL",
+      category: "Commercial",
+      type: "Design",
+      cover,
+      media: sortAndMap(filteredFiles),
+    };
+  })(),
   // ✅ Special handling for DUPLEX
   (() => {
     const { cover, filteredFiles } = extractCover(mediaImports.penthouseAbha);
     return {
-      id: 7,
+      id: 8,
       title: "PENTHOUSE - COMPOUND ABHA",
       category: "Residential",
       type: "Real",
@@ -139,7 +157,7 @@ export const projects = [
       mediaImports.penthouseVillaria
     );
     return {
-      id: 8,
+      id: 9,
       title: "PENTHOUSE - COMPOUND VILLARIA",
       category: "Residential",
       type: "Real",
@@ -147,13 +165,14 @@ export const projects = [
       media: sortAndMap(filteredFiles),
     };
   })(),
+
   // ✅ Special handling for DUPLEX
   (() => {
     const { cover, filteredFiles } = extractCover(
       mediaImports.duplexElSheikhZayed
     );
     return {
-      id: 9,
+      id: 10,
       title: "DUPLEX - COMPOUND ABHA",
       category: "Residential",
       type: "Real",

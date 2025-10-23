@@ -148,10 +148,21 @@ const ProjectModal = memo(({ isOpen, selectedProject, onClose }) => {
     if (!isAutoPlay || !selectedProject?.media?.length) return;
 
     const currentType = getMediaType(selectedProject.media[currentIndex]);
+    const isLastItem = currentIndex === selectedProject.media.length - 1;
 
     if (currentType === "image") {
-      // Auto-advance images every 3 seconds
-      autoPlayRef.current = setInterval(nextItem, 3000);
+      if (isLastItem) {
+        // Last image - stop auto-play and music after delay
+        autoPlayRef.current = setTimeout(() => {
+          setIsAutoPlay(false);
+          if (audioRef.current) {
+            audioRef.current.pause();
+          }
+        }, 3000);
+      } else {
+        // Auto-advance images every 3 seconds
+        autoPlayRef.current = setInterval(nextItem, 3000);
+      }
     } else if (currentType === "video") {
       // For videos, we'll handle auto-advance in the video event handlers
       clearInterval(autoPlayRef.current);
@@ -161,7 +172,10 @@ const ProjectModal = memo(({ isOpen, selectedProject, onClose }) => {
       }
     }
 
-    return () => clearInterval(autoPlayRef.current);
+    return () => {
+      clearInterval(autoPlayRef.current);
+      clearTimeout(autoPlayRef.current);
+    };
   }, [isAutoPlay, nextItem, selectedProject, currentIndex]);
 
   /**
@@ -196,13 +210,28 @@ const ProjectModal = memo(({ isOpen, selectedProject, onClose }) => {
    */
   const handleVideoEnd = useCallback(() => {
     if (isAutoPlay && selectedProject?.media?.length > 1) {
-      setIsVideoLoading(true);
-      transitionTimeoutRef.current = setTimeout(() => {
-        nextItem();
-        setIsVideoLoading(false);
-      }, 800);
+      const isLastItem = currentIndex === selectedProject.media.length - 1;
+      if (isLastItem) {
+        // Last video finished - stop auto-play and music
+        setIsAutoPlay(false);
+        if (audioRef.current) {
+          audioRef.current.pause();
+        }
+      } else {
+        setIsVideoLoading(true);
+        transitionTimeoutRef.current = setTimeout(() => {
+          nextItem();
+          setIsVideoLoading(false);
+        }, 800);
+      }
+    } else if (isAutoPlay && selectedProject?.media?.length === 1) {
+      // Last video finished - stop auto-play and music
+      setIsAutoPlay(false);
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
     }
-  }, [isAutoPlay, nextItem, selectedProject]);
+  }, [isAutoPlay, nextItem, selectedProject, currentIndex]);
 
   /**
    * Handle video load event
