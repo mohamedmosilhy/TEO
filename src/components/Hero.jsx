@@ -41,13 +41,11 @@ export default function Hero() {
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
 
       {/* Text */}
-      <div className="absolute bottom-20 md:left-10 left-5 text-white sm:text-center md:text-left z-10 w-[90%] md:w-[65%] px-4">
-        <h1 className="text-3xl md:text-4xl font-bold mb-6 drop-shadow-lg leading-snug uppercase">
-          We are designers, consultants and technical specialists
+      <div className="absolute bottom-10 text-center w-full z-10 px-2">
+        <h1 className="text-base md:text-xl font-bold mb-6 drop-shadow-lg text-white/30 leading-snug uppercase">
+          We are designers, consultants{" "}
+          <span className="ml-2 md:ml-0">and technical specialists</span>
         </h1>
-        <p className="text-sm md:text-base drop-shadow-md leading-relaxed">
-          Working in a culture where thinkers, makers and dreamers converge.
-        </p>
       </div>
     </section>
   );
