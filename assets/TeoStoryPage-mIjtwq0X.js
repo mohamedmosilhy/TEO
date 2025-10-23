@@ -1,1 +1,0 @@
-import{j as r,a as o}from"./index-DRIlP_hS.js";import{r as t}from"./router-DW0CDFo1.js";import"./vendor-gH-7aFTg.js";import"./icons-Bp-5Vjfq.js";import"./gsap-DKtf60Sy.js";const c=()=>(t.useEffect(()=>{window.scrollTo(0,0)},[]),r.jsx("div",{className:"min-h-screen bg-black",children:r.jsx(o,{})}));export{c as default};
